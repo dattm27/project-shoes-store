@@ -32,6 +32,8 @@ public class User {
 	private int status;
 	@Column
 	private String role;
+	@Column(name = "verification_code", updatable = false)
+	private String verificationCode;
 	public int getId() {
 		return id;
 	}
