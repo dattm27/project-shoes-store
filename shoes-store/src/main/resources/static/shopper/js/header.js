@@ -44,14 +44,14 @@ $.ajax({
 
 $.ajax({
 	url: '/signed-in',
-	type: 'POST',
+	type: 'GET',
 	dataType: 'html',
 	data: [
 		{ topshoe: 'topshoe' }
 	]
 })
 .done(function(res) {
-	if (res != '') {
+	if (res != 'anonymousUser') {
 		getCartHeaederContent();
 		$('#menu_login').addClass('d-none');
 		$('#menu_reg').addClass('d-none');
