@@ -94,5 +94,11 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
 	
 }
