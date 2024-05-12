@@ -31,7 +31,10 @@ public class SecurityConfig {
 			
 
 		})
-		.formLogin(withDefaults());
+		
+		.formLogin(withDefaults())
+		.csrf(csrf -> csrf.disable()); // Vô hiệu hóa CSRF
+		
 //				.oauth2Login(oauth2Login ->
 //	            oauth2Login
 //	                .loginPage("/login-form.html") // Sử dụng trang đăng nhập tùy chỉnh

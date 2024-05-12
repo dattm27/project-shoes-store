@@ -53,11 +53,11 @@ var datatable = $('.kt-datatable').KTDatatable({
 			title: 'Name',
 		},
 		{
-			field: 'versionName',
+			field: 'version',
 			title: 'Version',
 		},
 		{
-			field: 'formatPrice',
+			field: 'price',
 			title: 'Price',
 		},
 		// 					{

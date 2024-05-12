@@ -21,6 +21,7 @@ function getContent() {
 			topshoe.log("Navigated to " + window.location.href);
 			$('#router-outlet').html(res);
 			initActiveMenu();
+			//console.log(res);
 
 		})
 		.fail(function () {
