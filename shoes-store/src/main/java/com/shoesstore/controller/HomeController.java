@@ -1,6 +1,11 @@
 package com.shoesstore.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -10,12 +15,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shoesstore.model.Brand;
+import com.shoesstore.model.Category;
+import com.shoesstore.service.BrandService;
+import com.shoesstore.service.CategoryService;
 import com.shoesstore.service.UserService;
 
 @Controller
 public class HomeController {
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CategoryService categoryService;
+	
+	@Autowired
+	private BrandService brandService;
+	 private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@RequestMapping("/")
 	public String showHomePage(Model model) {
@@ -46,4 +62,19 @@ public class HomeController {
             return "";
         }
 	}
+	
+	@GetMapping("/category")
+	@ResponseBody
+	public ResponseEntity<List<Category>> getAllCategories() {
+		 List<Category> categories = categoryService.getAllCategories();  
+		 
+		return ResponseEntity.ok().body(categories);
+    }
+	@GetMapping("/brand")
+	@ResponseBody
+	public ResponseEntity<List<Brand>> getAllBrands() {
+		 List<Brand> brands= brandService.getAllBrands();  
+		 
+		return ResponseEntity.ok().body(brands);
+    }
 }

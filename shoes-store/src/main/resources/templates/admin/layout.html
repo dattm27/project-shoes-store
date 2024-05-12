@@ -1,70 +1,221 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-	<!-- begin::Head -->
-	<head>
-		<title>Admin | TopShoe</title>
-		<th:block th:insert="admin/fragments/common :: global_css"></th:block>
-	</head>
+<!-- begin::Head -->
 
-	<!-- end::Head -->
+<head>
+	<title>Admin | TopShoe</title>
+	<th:block th:insert="admin/fragments/common :: global_css"></th:block>
+</head>
 
-	<!-- begin::Body -->
-	<body class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--fixed kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
+<!-- end::Head -->
 
-		<!-- begin:: Page -->
+<!-- begin::Body -->
 
-		<!-- begin:: Header Mobile -->
-		<div th:replace="admin/fragments/header :: header_mobile"></div>
-		<!-- end:: Header Mobile -->
-
-		<div class="kt-grid kt-grid--hor kt-grid--root">
-			<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page">
-
-				<!-- begin:: Aside -->
-				<div th:replace="admin/fragments/sidebar"></div>
-				<!-- end:: Aside -->
-
-				<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper" id="kt_wrapper">
-
-					<!-- begin:: Header -->
-					<div th:replace="admin/fragments/header :: header"></div>
-					<!-- end:: Header -->
-
-					<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
-
-						<!-- begin:: Content Head -->
-						<div th:replace="admin/fragments/header :: sub_header"></div>
-						<!-- end:: Content Head -->
-
-						<!-- begin:: Content -->
-						<div id="router-outlet" class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid"></div>
-						<!-- end:: Content -->
-					</div>
-
-					<!-- begin:: Footer -->
-					<div th:replace="admin/fragments/footer"></div>
-					<!-- end:: Footer -->
+<body
+	class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--fixed kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
+	<!-- Modal -->
+	<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<!-- Header của modal -->
+				<div class="modal-header">
+					<h5 class="modal-title" id="addProductModalLabel">Thêm Sản Phẩm Mới</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
+				<!-- Nội dung của modal -->
+				<div class="modal-body">
+					<!-- Form nhập thông tin mới của sản phẩm -->
+					<form id="addProductForm" action="/products/save" method="post">
+						<div class="form-group">
+							<label for="productName">Tên Sản Phẩm</label>
+							<input type="text" class="form-control" id="productName" name="productName"
+								placeholder="Nhập tên sản phẩm">
+						</div>
+						<div class="form-group">
+							<label for="productPrice">Giá Sản Phẩm</label>
+							<input type="number" class="form-control" id="productPrice" name="productPrice"
+								placeholder="Nhập giá sản phẩm">
+						</div>
+						<div class="form-group">
+							<label for="productVersion">Phiên Bản</label>
+							<input type="text" class="form-control" id="productVersion" name="productVersion"
+								placeholder="Nhập phiên bản sản phẩm">
+						</div>
+						<div class="form-group">
+							<label for="productCategory">Danh Mục</label>
+							<select class="form-control" id="productCategory" name="productCategory">
+								<!-- Các option danh mục sẽ được thêm bằng JavaScript -->
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="productBrand">Thương Hiệu</label>
+							<select class="form-control" id="productBrand" name="productBrand">
+								<!-- Các option thương hiệu sẽ được thêm bằng JavaScript -->
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="productDescription">Mô tả Sản Phẩm</label>
+							<textarea class="form-control" id="productDescription" name="productDescription" rows="3"
+								placeholder="Nhập mô tả sản phẩm"></textarea>
+						</div>
+						<!-- Thêm các trường khác cho thông tin sản phẩm -->
+						<!-- Footer của modal -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+							<button type="submit" class="btn btn-primary">Lưu</button>
+						</div>
+					</form>
+				</div>
+
 			</div>
 		</div>
+	</div>
+	<!-- begin:: Page -->
 
-		<!-- end:: Page -->
+	<!-- begin:: Header Mobile -->
+	<div th:replace="admin/fragments/header :: header_mobile"></div>
+	<!-- end:: Header Mobile -->
 
-		<!-- begin::Quick Panel -->
-		<div th:replace="admin/fragments/header :: quick_panel"></div>
-		<!-- end::Quick Panel -->
+	<div class="kt-grid kt-grid--hor kt-grid--root">
+		<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page">
 
-		<!-- begin::Scrolltop -->
-		<div id="kt_scrolltop" class="kt-scrolltop">
-			<i class="fa fa-arrow-up"></i>
+			<!-- begin:: Aside -->
+			<div th:replace="admin/fragments/sidebar"></div>
+			<!-- end:: Aside -->
+
+			<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper" id="kt_wrapper">
+
+				<!-- begin:: Header -->
+				<div th:replace="admin/fragments/header :: header"></div>
+				<!-- end:: Header -->
+
+				<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+
+					<!-- begin:: Content Head -->
+					<div th:replace="admin/fragments/header :: sub_header"></div>
+					<!-- end:: Content Head -->
+
+					<!-- begin:: Content -->
+					<div id="router-outlet"
+						class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid"></div>
+					<!-- end:: Content -->
+				</div>
+
+				<!-- begin:: Footer -->
+				<div th:replace="admin/fragments/footer"></div>
+				<!-- end:: Footer -->
+			</div>
 		</div>
+	</div>
 
-		<!-- end::Scrolltop -->
+	<!-- end:: Page -->
 
-		<th:block th:insert="admin/fragments/common :: global_script" type="text/javascript"></th:block>
-		<script src="assets/js/template/layout.js" type="text/javascript"></script>
-	</body>
+	<!-- begin::Quick Panel -->
+	<div th:replace="admin/fragments/header :: quick_panel"></div>
+	<!-- end::Quick Panel -->
 
-	<!-- end::Body -->
+	<!-- begin::Scrolltop -->
+	<div id="kt_scrolltop" class="kt-scrolltop">
+		<i class="fa fa-arrow-up"></i>
+	</div>
+
+	<!-- end::Scrolltop -->
+
+	<th:block th:insert="admin/fragments/common :: global_script" type="text/javascript"></th:block>
+	<script src="assets/js/template/layout.js" type="text/javascript"></script>
+	<script>
+
+		// Hàm JavaScript được gọi từ fragment khi nút "Thêm mới" được nhấp vào
+		function openAddProductModal() {
+			// Hiển thị modal
+			$('#addProductModal').modal('show');
+		}
+
+		$(document).ready(function () {
+			// Gọi API endpoint để lấy danh sách danh mục từ máy chủ khi mở modal
+			$.ajax({
+				url: '/category',
+				type: 'GET',
+				dataType: 'json',
+				success: function (response) {
+					//console.log(response);
+					response.forEach(function (category) {
+						console.log(category)
+						$('#productCategory').append('<option value="' + category.id + '">' + category.name + '</option>');
+					});
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching categories:', error);
+				}
+			});
+
+			// Gọi API endpoint để lấy danh sách thương hiệu từ máy chủ khi mở modal
+			$.ajax({
+				url: '/brand',
+				type: 'GET',
+				dataType: 'json',
+				success: function (response) {
+					response.forEach(function (brand) {
+						$('#productBrand').append('<option value="' + brand.id + '">' + brand.name + '</option>');
+					});
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching brands:', error);
+				}
+			});
+		});
+
+	</script>
+	<!--thếm sản phẩm mới -->
+	<script>
+		$(document).ready(function () {
+			// Bắt sự kiện khi form submit
+			$('#addProductForm').submit(function (event) {
+				// Ngăn chặn hành động mặc định của form (chặn submit lại trang)
+				event.preventDefault();
+
+				// Lấy dữ liệu từ form
+				var formData = {
+					productName: $('#productName').val(),
+					productPrice: $('#productPrice').val(),
+					productVersion: $('#productVersion').val(),
+					productCategory: $('#productCategory').val(),
+					productBrand: $('#productBrand').val(),
+					productDescription: $('#productDescription').val()
+				};
+
+				// Gửi AJAX POST request đến endpoint xử lý tạo mới sản phẩm
+				$.ajax({
+					type: 'POST',
+					url: '/admin/products/save',
+					data: formData,
+					dataType: 'json',
+					encode: true
+				})
+					.done(function (data) {
+						// Xử lý kết quả từ server nếu cần
+						console.log(data);
+						// Đóng modal sau khi lưu thành công
+						$('#addProductModal').modal('hide');
+						// Nạp lại trang để cập nhật danh sách sản phẩm
+						//location.reload();
+						getContent();
+					})
+					.fail(function (data) {
+						// Xử lý lỗi nếu có
+						console.error(data);
+						// Hiển thị thông báo lỗi nếu cần
+						alert('Đã xảy ra lỗi! Vui lòng thử lại sau.');
+					});
+			});
+		});
+	</script>
+</body>
+
+<!-- end::Body -->
+
 </html>

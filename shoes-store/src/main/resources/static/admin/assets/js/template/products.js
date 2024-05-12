@@ -78,10 +78,11 @@ var datatable = $('.kt-datatable').KTDatatable({
 		// 							return '<span class="kt-badge ' + status[row.isDelete].class + ' kt-badge--inline kt-badge--pill">' + status[row.isDelete].title + '</span>';
 		// 						},
 		// 					}, 
-//		{
-//			field: 'status',
-//			title: 'Status',
-//			// callback function support for column rendering
+		{
+			field: 'status',
+			title: 'Status',
+			},
+			// callback function support for column rendering
 //			template: function (row) {
 ////				console.log(row);
 //				var status = {
