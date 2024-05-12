@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -65,11 +66,12 @@ public class AdminController {
 		
 		return "admin/products";
 	}
-	
+	;
 	@PostMapping("/products/data")
 	@ResponseBody
-	public List<Product> getProductData() {
-        return productService.getAllProducts(); // Trả về danh sách sản phẩm từ ProductService
+	public List<Product> getProductData(@RequestParam(name = "query[status]", required= false) String status,@RequestParam(name = "query[]", required= false) String name) {
+        System.out.println(status);
+		return productService.getProducts(status, name); // Trả về danh sách sản phẩm từ ProductService
     }
 	
 

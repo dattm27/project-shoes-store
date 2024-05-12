@@ -144,7 +144,7 @@
 				success: function (response) {
 					//console.log(response);
 					response.forEach(function (category) {
-						console.log(category)
+						//console.log(category)
 						$('#productCategory').append('<option value="' + category.id + '">' + category.name + '</option>');
 					});
 				},
@@ -198,7 +198,7 @@
 				})
 					.done(function (data) {
 						// Xử lý kết quả từ server nếu cần
-						console.log(data);
+						//console.log(data);
 						// Đóng modal sau khi lưu thành công
 						$('#addProductModal').modal('hide');
 						// Nạp lại trang để cập nhật danh sách sản phẩm

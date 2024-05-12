@@ -127,8 +127,9 @@ var datatable = $('.kt-datatable').KTDatatable({
 
 });
 
+
 $('#kt_form_status').on('change', function () {
-	datatable.search($(this).val().toLowerCase(), 'Status');
+	datatable.search($(this).val(), 'status');
 });
 
 $('#kt_form_type').on('change', function () {

@@ -4,7 +4,7 @@ import java.util.List;
 import  com.shoesstore.model.Product;
 
 public interface ProductService {
-	List<Product> getAllProducts();
+	List<Product> getProducts(String status, String name);
 
 	Product createProduct(Product product);
 }
