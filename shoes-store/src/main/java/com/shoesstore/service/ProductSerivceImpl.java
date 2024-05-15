@@ -32,5 +32,18 @@ public class ProductSerivceImpl implements ProductService {
 		
 		return productRepository.save(product);
 	}
+	//thay đổi trạng thái của mặt hàng thành nghỉ bản
+	@Override
+	public boolean updateProductStatus(int id, String status) {
+	//lấy ra đối tượng mặt hàng đó trong cơ sở dữ liệu
+		Product product = productRepository.findById(id).get();
+		if (product!= null) {
+			product.setStatus(status);
+			productRepository.save(product);
+			return true;
+		}
+		return false;
+		
+	}
 
 }

@@ -55,6 +55,17 @@ public class AdminController {
 		
 		return "admin/layout";
 	}
+	@GetMapping("/products")
+	public String redirectToDashboard() {
+		// Lấy thông tin người dùng từ session để lấy thông tin công ty
+		CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		//model.addAttribute("username", currentUser.getFullName());
+		
+		//lấy danh sách hàng hoá đưa vào
+		
+		return "redirect:/admin/dashboard";
+	}
 	@PostMapping("/products")
 	public String ProductManage() {
 		// Lấy thông tin người dùng từ session để lấy thông tin công ty

@@ -81,5 +81,28 @@ public class ProductController {
 	    return ResponseEntity.ok().body(savedProduct);
 	}
 	
+	@PostMapping("/stop-sale/{id}")
+	public ResponseEntity<Object> stopSale (@PathVariable("id") int id) {
+        // Thực hiện logic để thay đổi trạng thái của sản phẩm có ID là productId thành "Nghỉ bán"
+        if (productService.updateProductStatus(id, "Nghỉ bán")) {
+        	 // Trả về phản hồi thành công nếu cần
+            return ResponseEntity.ok().build();
+        }
+        else return ResponseEntity.badRequest().build();
+       
+
+	}
+	@PostMapping("/start-sale/{id}")
+	public ResponseEntity<Object> startSale (@PathVariable("id") int id) {
+        // Thực hiện logic để thay đổi trạng thái của sản phẩm có ID là productId thành "Nghỉ bán"
+        if (productService.updateProductStatus(id, "Đang bán") ){
+        	 // Trả về phản hồi thành công nếu cần
+            return ResponseEntity.ok().build();
+        }
+        else return ResponseEntity.badRequest().build();
+       
+
+	}
+	
 	
 }
