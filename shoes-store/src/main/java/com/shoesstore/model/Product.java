@@ -1,6 +1,7 @@
 package com.shoesstore.model;
 
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -39,6 +40,11 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
+    
+    //Ánh xạ một sản phẩm có thể có nhiều ảnh
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images;
+
 
 	public Long getId() {
 		return id;
