@@ -81,9 +81,10 @@ public class AdminController {
 	@PostMapping("/products/data")
 	@ResponseBody
 	public List<Product> getProductData(@RequestParam(name = "query[status]", required= false) String status,@RequestParam(name = "query[]", required= false) String name) {
-        System.out.println(status);
+        
 		return productService.getProducts(status, name); // Trả về danh sách sản phẩm từ ProductService
     }
+	
 	
 
 }

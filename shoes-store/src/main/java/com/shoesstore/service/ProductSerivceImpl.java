@@ -18,7 +18,8 @@ public class ProductSerivceImpl implements ProductService {
 	
 	@Override
 	public List<Product> getProducts(String status, String name) {
-		 Specification<Product> spec = Specification.where(null);
+		if (status == null && name == null) return productRepository.findAllByDeleted(false); 
+		Specification<Product> spec = Specification.where(null);
 		    if (status != null) {
 		        spec = spec.and(ProductSpecifications.hasStatus(status));
 		    }
@@ -44,6 +45,18 @@ public class ProductSerivceImpl implements ProductService {
 		}
 		return false;
 		
+	}
+	//xoá tạm một sản phẩm bằng cách chuyển is_delete của sản phẩm đó thành true -> ẩn khỏi bảng quản lý
+	@Override
+	public boolean deleteProductStatus(int id) {
+		//lấy ra đối tượng mặt hàng đó trong cơ sở dữ liệu
+		Product product = productRepository.findById(id).get();
+		if (product!= null) {
+			product.setDeleted(true);
+			productRepository.save(product);
+			return true;
+		}
+		return false;
 	}
 
 }

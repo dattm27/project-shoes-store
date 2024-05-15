@@ -5,7 +5,7 @@ var datatable = $('.kt-datatable').KTDatatable({
 		source: {
 			read: {
 				url: '/admin/products/data',
-				map: function (raw) {
+				map: function(raw) {
 					// sample data mapping
 					var dataSet = raw;
 					if (typeof raw.data !== 'undefined') {
@@ -81,11 +81,11 @@ var datatable = $('.kt-datatable').KTDatatable({
 		{
 			field: 'status',
 			title: 'Status',
-//			},
+			//			},
 			// callback function support for column rendering
-			template: function (row) {
-////				console.log(row);
-			var status = {
+			template: function(row) {
+				////				console.log(row);
+				var status = {
 					'Nghỉ bán': { 'title': 'Nghỉ bán', 'state': 'danger' },
 					'Đang bán': { 'title': 'Đang bán', 'state': 'success' },
 					'Sắp có': { 'title': 'Sắp có', 'state': 'accent' },
@@ -103,9 +103,9 @@ var datatable = $('.kt-datatable').KTDatatable({
 			width: 130,
 			overflow: 'visible',
 			textAlign: 'center',
-			template: function (row, index, datatable) {
+			template: function(row, index, datatable) {
 				var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
-				 var html = '<div class="dropdown ' + dropup + '">\
+				var html = '<div class="dropdown ' + dropup + '">\
                         <a href="#" class="btn btn-clean btn-icon btn-pill" data-toggle="dropdown">\
                             <i class="la la-ellipsis-h"></i>\
                         </a>\
@@ -118,76 +118,100 @@ var datatable = $('.kt-datatable').KTDatatable({
                     <a class="btn btn-clean btn-icon btn-pill" title="Edit details">\
                         <i class="la la-edit"></i>\
                     </a>\
-                    <a href="#" class="btn btn-clean btn-icon btn-pill" title="Delete">\
+                    <a onclick="deleteProduct(' + row.id + ')" class="btn btn-clean btn-icon btn-pill" title="Delete">\
                         <i class="la la-trash"></i>\
                     </a>';
 
-        	return html;
-			
+				return html;
+
 			}
 		},
-		],
+	],
 
 });
 
 
-$('#kt_form_status').on('change', function () {
+$('#kt_form_status').on('change', function() {
 	datatable.search($(this).val(), 'status');
 });
 
-$('#kt_form_type').on('change', function () {
+$('#kt_form_type').on('change', function() {
 	datatable.search($(this).val().toLowerCase(), 'Type');
 });
 
 
 // Hàm thực hiện AJAX khi click vào liên kết "Mở bán"
 function startSale(productId) {
-    var url = '/product/start-sale/' + productId;
+	var url = '/product/start-sale/' + productId;
 
-    // Gửi yêu cầu AJAX
-    $.ajax({
-        url: url,
-        method: 'POST', // Hoặc 'GET' tùy thuộc vào cách bạn cấu hình server
-        data: {}, // Dữ liệu nếu cần
-        success: function (response) {
+	// Gửi yêu cầu AJAX
+	$.ajax({
+		url: url,
+		method: 'POST', // Hoặc 'GET' tùy thuộc vào cách bạn cấu hình server
+		data: {}, // Dữ liệu nếu cần
+		success: function(response) {
 			//alert("Nghỉ bán thành công");
-            // Xử lý kết quả thành công nếu cần
-            
-            //Đổi trạng thái trên bảng thành nghỉ bán
-              // Cập nhật trạng thái của hàng tương ứng trong DataTable thành "Nghỉ bán"
-            var row = $(this).closest('tr');
-            datatable.row(row).data().status = 'Đang bán'
-            datatable.reload(); // Tải lại DataTable để cập nhật giao diện
-        },
-        error: function (xhr, status, error) {
-            // Xử lý lỗi nếu có
-            console.error(xhr.responseText);
-        }
-    });
+			// Xử lý kết quả thành công nếu cần
+
+			//Đổi trạng thái trên bảng thành nghỉ bán
+			// Cập nhật trạng thái của hàng tương ứng trong DataTable thành "Nghỉ bán"
+			var row = $(this).closest('tr');
+			datatable.row(row).data().status = 'Đang bán'
+			datatable.reload(); // Tải lại DataTable để cập nhật giao diện
+		},
+		error: function(xhr, status, error) {
+			// Xử lý lỗi nếu có
+			console.error(xhr.responseText);
+		}
+	});
 }
 
 // Hàm thực hiện AJAX khi click vào liên kết "Nghỉ bán"
 function stopSale(productId) {
-    var url = '/product/stop-sale/' + productId;
+	var url = '/product/stop-sale/' + productId;
 
-    // Gửi yêu cầu AJAX
-    $.ajax({
-        url: url,
-        method: 'POST', // Hoặc 'GET' tùy thuộc vào cách bạn cấu hình server
-        data: {}, // Dữ liệu nếu cần
-        success: function (response) {
+	// Gửi yêu cầu AJAX
+	$.ajax({
+		url: url,
+		method: 'POST', // Hoặc 'GET' tùy thuộc vào cách bạn cấu hình server
+		data: {}, // Dữ liệu nếu cần
+		success: function(response) {
 			//alert("Nghỉ bán thành công");
-            // Xử lý kết quả thành công nếu cần
-            
-            //Đổi trạng thái trên bảng thành nghỉ bán
-              // Cập nhật trạng thái của hàng tương ứng trong DataTable thành "Nghỉ bán"
-            var row = $(this).closest('tr');
-            datatable.row(row).data().status = 'Nghỉ bán';
-            datatable.reload(); // Tải lại DataTable để cập nhật giao diện
-        },
-        error: function (xhr, status, error) {
-            // Xử lý lỗi nếu có
-            console.error(xhr.responseText);
-        }
-    });
+			// Xử lý kết quả thành công nếu cần
+
+			//Đổi trạng thái trên bảng thành nghỉ bán
+			// Cập nhật trạng thái của hàng tương ứng trong DataTable thành "Nghỉ bán"
+			var row = $(this).closest('tr');
+			datatable.row(row).data().status = 'Nghỉ bán';
+			datatable.reload(); // Tải lại DataTable để cập nhật giao diện
+		},
+		error: function(xhr, status, error) {
+			// Xử lý lỗi nếu có
+			console.error(xhr.responseText);
+		}
+	});
+}
+
+// Hàm thực hiện AJAX khi click vào liên kết "Xoá sản phẩm"
+function deleteProduct(productId) {
+	if (confirm("Bạn có chắc chắn muốn xoá?")) {
+		var url = '/product/delete/' + productId;
+
+		// Gửi yêu cầu AJAX
+		$.ajax({
+			url: url,
+			method: 'POST', // Hoặc 'GET' tùy thuộc vào cách bạn cấu hình server
+			data: {}, // Dữ liệu nếu cần
+			success: function(response) {
+				//alert("Nghỉ bán thành công");
+				// Xử lý kết quả thành công nếu cần
+
+				datatable.reload(); // Tải lại DataTable để cập nhật giao diện sau khi xoá
+			},
+			error: function(xhr, status, error) {
+				// Xử lý lỗi nếu có
+				console.error(xhr.responseText);
+			}
+		});
+	}
 }

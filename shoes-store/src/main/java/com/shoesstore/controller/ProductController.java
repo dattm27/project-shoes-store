@@ -105,4 +105,13 @@ public class ProductController {
 	}
 	
 	
+	//xoá tạm sản phẩm bằng cách đặt is_deleted của sản phẩm đó lên true
+	@PostMapping("/delete/{id}")
+	public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id){
+		if (productService.deleteProductStatus(id)) 
+		{return ResponseEntity.ok().build();}
+		else return ResponseEntity.badRequest().build();
+		
+	}
+	
 }

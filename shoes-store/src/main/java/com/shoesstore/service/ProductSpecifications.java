@@ -27,7 +27,9 @@ public class ProductSpecifications {
             if (name != null && !name.isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("name"), name));
             }
-
+            //Sản phẩm này phải là sản phẩm chưa bị xoá
+            // Thêm điều kiện sản phẩm chưa bị xoá
+            predicates.add(criteriaBuilder.equal(root.get("is_deleted"), false));
             // Thêm các điều kiện tìm kiếm cho các thuộc tính khác
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
