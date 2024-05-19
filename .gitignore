@@ -2,4 +2,4 @@ shoes-store/src/main/resources/application.properties
 .DS_Store
 shoes-store/src/.DS_Store
 shoes-store/src/main/.DS_Store
-/src/main/webapp/products/
+shoes-store/src/main/webapp/products/
