@@ -142,7 +142,7 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(@RequestParam("productId") int productId,@RequestParam("productName") String productName,
 			@RequestParam("productPrice") double productPrice, @RequestParam("productVersion") String productVersion,
 			@RequestParam("productCategory") int categoryId, @RequestParam("productBrand") int brandId, @RequestParam("productDescription") String description,
-			@RequestParam("productImages") List<MultipartFile> productImages, @RequestParam("deletedImages") List<Integer> deletedImages)  {
+			@RequestParam("productImages") List<MultipartFile> productImages, @RequestParam(name = "deletedImages", required =false) List<Integer> deletedImages)  {
         // Xử lý cập nhật thông tin sản phẩm và xoá các ảnh đã cho
         productService.updateProduct(productId, productName, productPrice, productVersion, categoryId, brandId, description, productImages, deletedImages);
 

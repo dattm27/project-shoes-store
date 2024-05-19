@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shoesstore.model.Brand;
 import com.shoesstore.model.Category;
+import com.shoesstore.model.Product;
 import com.shoesstore.service.BrandService;
 import com.shoesstore.service.CategoryService;
+import com.shoesstore.service.ProductService;
 import com.shoesstore.service.UserService;
 
 @Controller
@@ -31,10 +33,15 @@ public class HomeController {
 	
 	@Autowired
 	private BrandService brandService;
+	
+	@Autowired
+	private ProductService productService;
 	 private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@RequestMapping("/")
 	public String showHomePage(Model model) {
+		List<Product> productList = productService.getProducts(null, null);
+		model.addAttribute("products",productList);
 		return "/shopper/index";
 	}
 	
