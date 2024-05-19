@@ -1,6 +1,8 @@
 package com.shoesstore.service;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import  com.shoesstore.model.Product;
 
 public interface ProductService {
@@ -10,4 +12,9 @@ public interface ProductService {
 	
 	boolean updateProductStatus(int id, String status);
 	boolean deleteProductStatus(int id);
+
+	Product findById(int id);
+
+	void updateProduct(int productId, String productName, double productPrice, String productVersion, int categoryId,
+			int brandId, String description, List<MultipartFile> productImages, List<Integer> deletedImages);
 }

@@ -10,4 +10,6 @@ import com.shoesstore.model.Product;
 public interface ProductImageService {
 	
 	public void saveProductImages(Product product, List<MultipartFile> images) throws IOException;
+
+	public void deleteProductImages(List<Integer> deletedImages) throws IOException ;
 }

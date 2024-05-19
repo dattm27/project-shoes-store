@@ -3,6 +3,9 @@ package com.shoesstore.model;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -43,6 +46,7 @@ public class Product {
     
     //Ánh xạ một sản phẩm có thể có nhiều ảnh
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Chỉ định đây là phía "quản lý" của quan hệ - tránh lỗi vòng lặp JSON
     private List<ProductImage> images;
 
 
@@ -134,5 +138,13 @@ public class Product {
 		this.updatedAt = updatedAt;
 	}
 
+	public List<ProductImage> getImages() {
+		return images;
+	}
+
+//	public void setImages(List<ProductImage> images) {
+//		this.images = images;
+//	}
+	
     // Constructors, getters, setters
 }

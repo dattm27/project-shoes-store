@@ -1,12 +1,18 @@
 package com.shoesstore.service;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.shoesstore.model.Brand;
+import com.shoesstore.model.Category;
 import com.shoesstore.model.Product;
 import com.shoesstore.repository.ProductRepository;
 
@@ -14,7 +20,15 @@ import com.shoesstore.repository.ProductRepository;
 public class ProductSerivceImpl implements ProductService {
 	@Autowired
 	private ProductRepository productRepository;
-
+	
+	@Autowired
+	private CategoryService categoryService;
+	
+	@Autowired
+	private ProductImageService productImageService;
+	
+	@Autowired
+	private BrandService brandService;
 	
 	@Override
 	public List<Product> getProducts(String status, String name) {
@@ -57,6 +71,52 @@ public class ProductSerivceImpl implements ProductService {
 			return true;
 		}
 		return false;
+	}
+	//lấy ra thông tin chi tiết của một sản phẩm
+	@Override
+	public Product findById(int id) {
+		return productRepository.findById(id).get();
+	}
+	@Override
+	public void updateProduct(int productId, String productName, double productPrice, String productVersion,
+			int categoryId, int brandId, String description, List<MultipartFile> productImages, List<Integer> deletedImages) {
+		// TODO Auto-generated method stub
+		Product product = productRepository.findById(productId).get();
+		product.setName(productName);
+		product.setPrice(productPrice);
+		product.setVersion(productVersion);
+		//product.setCreatedAt(new Date());
+		product.setUpdatedAt(new Date());
+		product.setDescription(description);
+		
+
+		// Lấy thông tin về danh mục và thương hiệu từ cơ sở dữ liệu
+		Category category = categoryService.getCategoryById(categoryId).get();
+		Brand brand = brandService.getBrandById(brandId).get();
+
+		// Gán danh mục và thương hiệu cho sản phẩm
+		product.setCategory(category);
+		product.setBrand(brand);
+
+		// Lưu sản phẩm vào cơ sở dữ liệu
+		Product savedProduct =productRepository.save(product);
+
+		// xử lý lưu trữ ảnh
+		try {
+			productImageService.saveProductImages(product, productImages);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//xử lý xoá ảnh cũ
+		try {
+			productImageService.deleteProductImages(deletedImages);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

@@ -47,13 +47,13 @@
 						</div>
 						<div class="form-group">
 							<label for="productCategory">Danh Mục</label>
-							<select class="form-control" id="productCategory" name="productCategory">
+							<select class="form-control productCategory" id="productCategory" name="productCategory">
 								<!-- Các option danh mục sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="productBrand">Thương Hiệu</label>
-							<select class="form-control" id="productBrand" name="productBrand">
+							<select class="form-control productBrand" id="productBrand" name="productBrand">
 								<!-- Các option thương hiệu sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
@@ -78,6 +78,80 @@
 			</div>
 		</div>
 	</div>
+	<!--modal để chỉnh sửa thông tin sản phẩm-->
+	<!-- Modal chỉnh sửa sản phẩm -->
+	<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable" role="document">
+			<div class="modal-content">
+				<!-- Header của modal -->
+				<div class="modal-header">
+					<h5 class="modal-title" id="editProductModalLabel">Chỉnh Sửa Sản Phẩm</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<!-- Nội dung của modal -->
+				<div class="modal-body">
+					<!-- Form chỉnh sửa thông tin sản phẩm -->
+					<form id="editProductForm" action="/products/update" method="post" enctype="multipart/form-data">
+						<input type="hidden" id="editProductId" name="productId">
+						<div class="form-group">
+							<label for="editProductName">Tên Sản Phẩm</label>
+							<input type="text" class="form-control" id="editProductName" name="productName"
+								placeholder="Nhập tên sản phẩm">
+						</div>
+						<div class="form-group">
+							<label for="editProductPrice">Giá Sản Phẩm</label>
+							<input type="number" class="form-control" id="editProductPrice" name="productPrice"
+								placeholder="Nhập giá sản phẩm">
+						</div>
+						<div class="form-group">
+							<label for="editProductVersion">Phiên Bản</label>
+							<input type="text" class="form-control" id="editProductVersion" name="productVersion"
+								placeholder="Nhập phiên bản sản phẩm">
+						</div>
+						<div class="form-group">
+							<label for="editProductCategory">Danh Mục</label>
+							<select class="form-control productCategory" id="editProductCategory" name="productCategory">
+								<!-- Các option danh mục sẽ được thêm bằng JavaScript -->
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="editProductBrand">Thương Hiệu</label>
+							<select class="form-control productBrand" id="editProductBrand" name="productBrand">
+								<!-- Các option thương hiệu sẽ được thêm bằng JavaScript -->
+							</select>
+						</div>
+						<!-- Hình ảnh hiện tại của sản phẩm -->
+						<div class="form-group">
+							<label>Hình ảnh hiện tại</label>
+							<div id="currentProductImages" class="d-flex flex-wrap">
+								<!-- Hình ảnh sẽ được thêm bằng JavaScript -->
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="editProductImages">Ảnh Sản Phẩm</label>
+							<input type="file" class="form-control" id="editProductImages" name="productImages"
+								multiple>
+						</div>
+						<div class="form-group">
+							<label for="editProductDescription">Mô tả Sản Phẩm</label>
+							<textarea class="form-control" id="editProductDescription" name="productDescription" rows="3"
+								placeholder="Nhập mô tả sản phẩm"></textarea>
+						</div>
+						<!-- Footer của modal -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+							<button type="submit" class="btn btn-primary">Lưu</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 	<!-- begin:: Page -->
 
 	<!-- begin:: Header Mobile -->
@@ -149,7 +223,7 @@
 					//console.log(response);
 					response.forEach(function (category) {
 						//console.log(category)
-						$('#productCategory').append('<option value="' + category.id + '">' + category.name + '</option>');
+						$('.productCategory').append('<option value="' + category.id + '">' + category.name + '</option>');
 					});
 				},
 				error: function (xhr, status, error) {
@@ -164,7 +238,7 @@
 				dataType: 'json',
 				success: function (response) {
 					response.forEach(function (brand) {
-						$('#productBrand').append('<option value="' + brand.id + '">' + brand.name + '</option>');
+						$('.productBrand').append('<option value="' + brand.id + '">' + brand.name + '</option>');
 					});
 				},
 				error: function (xhr, status, error) {
@@ -211,6 +285,104 @@
 			});
 		});
 	</script>
+	<!--Script cho chỉnh sửa sản phẩm mới-->
+	<script>// Hàm để mở modal chỉnh sửa sản phẩm và điền thông tin sản phẩm vào form
+		var deletedImages = [];
+		function editProduct(productId) {
+			//reset danh sách ảnh sẽ xoá về trống
+			deletedImages = [];
+			// Gọi AJAX để lấy thông tin sản phẩm từ server
+			$.ajax({
+				url: '/product/detail/' + productId, // URL để lấy thông tin sản phẩm
+				method: 'GET',
+				success: function (product) {
+					// Điền thông tin sản phẩm vào form trong modal
+					$('#editProductId').val(product.id);
+					$('#editProductName').val(product.name);
+					$('#editProductPrice').val(product.price);
+					$('#editProductVersion').val(product.version);
+					$('#editProductCategory').val(product.category.id);
+					$('#editProductBrand').val(product.brand.id);
+					$('#editProductDescription').val(product.description);
+					// Hiển thị hình ảnh hiện tại của sản phẩm
+					var currentImagesContainer = $('#currentProductImages');
+					currentImagesContainer.empty();
+					product.images.forEach(function (image) {
+						var imageElement = `
+                   <div id="imageContainer_${image.id}" class="product-image" style="position: relative; margin: 10px;">
+    <img src="/product/images/${image.imageUrl}" alt="${image.name}" class="img-thumbnail" style="max-width: 150px;">
+    <button type="button" class="btn btn-danger btn-sm remove-image" style="position: absolute; top: 5px; right: 5px;" data-image-id="${image.id}" data-image-url="${image.imageUrl}">
+        &times;
+    </button>
+</div>`;
+						currentImagesContainer.append(imageElement);
+					});
+
+					// Hiển thị modal chỉnh sửa sản phẩm
+					$('#editProductModal').modal('show');
+				},
+				error: function (xhr, status, error) {
+					console.error(xhr.responseText);
+				}
+			});
+		}
+		//Xử lý xoá hình ảnh
+		$(document).on('click', '.remove-image', function () {
+			// Lấy ID của hình ảnh cần xoá
+			var imageId = $(this).data('image-id');
+			//var imageUrl = $(this).data('image-url');
+
+			// Thêm hình ảnh vào danh sách đã xoá
+			deletedImages.push(imageId);
+			// Log danh sách các hình ảnh đã xoá vào console
+			console.log("Deleted Images:", deletedImages);
+
+			// Ẩn phần tử chứa hình ảnh có ID tương ứng
+			$(`#imageContainer_${imageId}`).hide();
+		});
+		//Xử lý sự kiện admin submit form chỉnh sửa thông tin sản phẩm
+		$(document).ready(function () {
+			// Bắt sự kiện khi form submit
+			$('#editProductForm').submit(function (event) {
+				// Ngăn chặn hành động mặc định của form (chặn submit lại trang)
+				event.preventDefault();
+
+				var form = $('#editProductForm')[0];
+				var formData = new FormData(form);
+
+				// Thêm danh sách những ảnh đã xoá vào FormData
+				deletedImages.forEach(function (image) {
+					formData.append('deletedImages[]', JSON.stringify(image));
+				});
+
+				// Gửi AJAX POST request đến endpoint xử lý tạo mới sản phẩm
+				$.ajax({
+					type: 'POST',
+					url: '/product/update',
+					data: formData,
+					processData: false, // prevent jQuery from automatically transforming the data into a query string
+					contentType: false, // prevent jQuery from overriding the multipart content type
+				})
+					.done(function (data) {
+						// Xử lý kết quả từ server nếu cần
+						//console.log(data);
+						// Đóng modal sau khi lưu thành công
+						$('#editProductModal').modal('hide');
+						// Nạp lại trang để cập nhật danh sách sản phẩm
+						//location.reload();
+						getContent();
+					})
+					.fail(function (data) {
+						// Xử lý lỗi nếu có
+						console.error(data);
+						// Hiển thị thông báo lỗi nếu cần
+						alert('Đã xảy ra lỗi! Vui lòng thử lại sau.');
+					});
+			});
+		});
+	</script>
+
+
 </body>
 
 <!-- end::Body -->

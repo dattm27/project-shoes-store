@@ -115,7 +115,7 @@ var datatable = $('.kt-datatable').KTDatatable({
                             <a class="dropdown-item" ><i class="la la-print"></i> Generate Report</a>\
                         </div>\
                     </div>\
-                    <a class="btn btn-clean btn-icon btn-pill" title="Edit details">\
+                    <a class="btn btn-clean btn-icon btn-pill" title="Edit details" onclick="editProduct('+row.id+')">\
                         <i class="la la-edit"></i>\
                     </a>\
                     <a onclick="deleteProduct(' + row.id + ')" class="btn btn-clean btn-icon btn-pill" title="Delete">\
@@ -200,7 +200,7 @@ function deleteProduct(productId) {
 		// Gửi yêu cầu AJAX
 		$.ajax({
 			url: url,
-			method: 'POST', // Hoặc 'GET' tùy thuộc vào cách bạn cấu hình server
+			method: 'POST', 
 			data: {}, // Dữ liệu nếu cần
 			success: function(response) {
 				//alert("Nghỉ bán thành công");

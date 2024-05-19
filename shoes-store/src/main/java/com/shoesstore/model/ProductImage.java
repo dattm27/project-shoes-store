@@ -1,5 +1,7 @@
 package com.shoesstore.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class ProductImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @JsonBackReference // Chỉ định đây là phía "tham chiếu" của quan hệ -tránh lỗi vòng lặp JSON
     private Product product;
 
     // Constructors, getters, and setters
