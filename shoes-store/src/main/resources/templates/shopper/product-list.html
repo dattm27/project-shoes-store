@@ -231,7 +231,7 @@
 													<td th:text="${product.name + ' - ' + product.version}"></td>
 												</a>
 											</h2>
-											<div class="tt-price" th:text="'$'+${product.price}">
+											<div class="tt-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
 												price
 											</div>
 											<div class="tt-product-inside-hover">

@@ -166,7 +166,7 @@
 								<h2 class="tt-title">
 									<a th:href="@{/product/} + ${product.id}" th:text="${product.name}">Name</a>
 								</h2>
-								<div class="tt-price" th:text="'$'+${product.price}">
+								<div class="tt-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
 									price
 								</div>
 								<div class="tt-product-inside-hover">
