@@ -45,7 +45,12 @@ public class HomeController {
 		model.addAttribute("products", productList);
 		return "/shopper/index";
 	}
-
+	
+	@RequestMapping("/index")
+	public String showIndex(Model model) {
+	
+		return "redirect:/";
+	}
 	@GetMapping("user-list")
 	public String showUsers(Model model) {
 		// hien thi danh sach cac user trong he thong
@@ -88,15 +93,39 @@ public class HomeController {
 	}
 
 	@GetMapping("/product-listing")
-	public String showProductLis(Model model, @RequestParam(name = "category", required = false) Integer category_id,
-			@RequestParam(name = "brand", required = false) Integer brand_id) {
+	public String showProductLis(Model model, @RequestParam(name = "categoryId", required = false) Integer category_id,
+			@RequestParam(name = "brandId", required = false) Integer brand_id) {
 		List<Brand> brands = brandService.getAllBrands();
 		List<Category> categories = categoryService.getAllCategories();
 		model.addAttribute("categories", categories);
 		model.addAttribute("brands", brands);
-		List<Product> productList = productService.getProducts(null, null);
-		model.addAttribute("products", productList);
-
+		//Brand được chọn để lọc
+		Brand brand = null;
+		if (brand_id != null) {
+			 brand = brandService.getBrandById(brand_id).get();
+			
+		}
+		model.addAttribute("brand", brand);
+		//Category được chọn để lọc
+		Category category = null;
+		if (category_id != null) {
+			category = categoryService.getCategoryById(category_id).get();
+		}
+		model.addAttribute("category",category);
+		List<Product> productList = productService.listProducts(category_id, brand_id);
+		if (productList!= null && productList.size() > 0 ) model.addAttribute("products", productList);
+		
+		return "shopper/product-list";
+	}
+	
+	@GetMapping("/search")
+	public String searchProductByName(@RequestParam(name = "q", required = false )String name, Model model) {
+		List<Product> products = productService.getProducts("Đang bán", name);
+		List<Brand> brands = brandService.getAllBrands();
+		List<Category> categories = categoryService.getAllCategories();
+		model.addAttribute("categories", categories);
+		model.addAttribute("brands", brands);
+		model.addAttribute("products",products);
 		return "shopper/product-list";
 	}
 

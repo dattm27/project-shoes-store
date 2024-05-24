@@ -129,4 +129,18 @@ public class ProductSerivceImpl implements ProductService {
 
 	}
 
+	@Override
+	public List<Product> listProducts(Integer category_id, Integer brand_id) {
+		if (category_id != null) {
+			if(brand_id != null) return productRepository.findAllByBrandIdAndCategoryId(brand_id, category_id);
+			else return  productRepository.findAllByCategoryId(category_id);
+		}
+		else {
+			if(brand_id != null) return productRepository.findAllByBrandId(brand_id);
+			else return productRepository.findAllByDeleted(false);
+		}
+	
+
+	}
+
 }

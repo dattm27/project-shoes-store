@@ -25,6 +25,7 @@
 			<ul>
 				<li><a href="/">Trang Chủ</a></li>
 				<li>Danh Sách Sản Phẩm</li>
+				
 			</ul>
 		</div>
 	</div>
@@ -50,8 +51,10 @@
 							<div class="tt-collapse-content">
 								<ul class="tt-filter-list" id="list-filter">
 									<!-- 								<li><a href="#">White</a></li> -->
+									<li th:if="${brand}" th:text="${brand.name}">Selected Brand</li>
+									<li th:if="${category}" th:text="${category.name}">Selected Brand</li>
 								</ul>
-								<a href="#" id="remove-all-filter" class="btn-link-02">Loại bỏ tất cả lọc</a>
+								<a href="/product-listing" id="remove-all-filter" class="btn-link-02">Loại bỏ tất cả lọc</a>
 							</div>
 						</div>
 						<div class="tt-collapse open ">
@@ -60,7 +63,7 @@
 								<ul class="tt-list-row" id="list-gategory">
 									<!-- 								<li class="active"><a href="#">a</a></li> -->
 									<li th:each="category : ${categories}"><a
-											th:href="'/product-listing?categoryId=' + ${category.id}"
+											th:href="'/product-listing?' + (${brand != null} ? 'brandId=' + ${brand.id} : '') + (${category != null} ? '&categoryId=' + ${category.id} : '')"
 											th:text="${category.name}"></a></li>
 								</ul>
 							</div>
@@ -70,7 +73,7 @@
 							<div class="tt-collapse-content">
 								<ul class="tt-list-row" id="list-brand">
 									<!-- 								<li class="active"><a href="#">a</a></li> -->
-									<li th:each="brand : ${brands}"><a th:href="'/product-listing?brandId='+${brand.id}"
+									<li th:each="brand : ${brands}"><a th:href="'/product-listing?brandId='+${brand.id} + (${category != null} ? '&categoryId=' +  ${category.id} : '') "
 											th:text="${brand.name}">LACOSTE</a></li>
 								</ul>
 							</div>
@@ -178,8 +181,10 @@
 							</div>
 							<!--Phần dành cho sản phẩm-->
 							<div class="tt-product-listing row">
-								<h5 th:if="${#lists.isEmpty(products)}">Hiện không có sản phẩm</h5>
-								<div th:fragment="product-listing-item" class="col-6 col-md-4 tt-col-item"
+								
+								<h5 th:unless="${products}" >Hiện không có sản phẩm</h5>
+								
+								<div th:if="${products}"th:fragment="product-listing-item" class="col-6 col-md-4 tt-col-item"
 									th:each="product : ${products}">
 									<div class="tt-product thumbprod-center">
 										<div class="tt-image-box">

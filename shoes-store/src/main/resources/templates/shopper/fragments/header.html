@@ -429,7 +429,7 @@
 			 			<!-- tt-search -->
 						<form action="/search" method="get" role="search">
 							<i class="icon-f-85"></i>
-							<input class="tt-search-input" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." aria-label="SEARCH PRODUCTS..." autocomplete="off" required>
+							<input class="tt-search-input" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." aria-label="SEARCH PRODUCTS..." autocomplete="off" required th:value="${param.q} ">
 							<button type="submit" class="tt-btn-search">TÌM KIẾM</button>
 							<div class="search-results" style="display: none;"></div>
 						</form>

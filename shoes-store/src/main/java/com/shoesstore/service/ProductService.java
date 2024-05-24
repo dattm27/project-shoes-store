@@ -17,4 +17,6 @@ public interface ProductService {
 
 	void updateProduct(int productId, String productName, double productPrice, String productVersion, int categoryId,
 			int brandId, String description, List<MultipartFile> productImages, List<Integer> deletedImages);
+	//lọc sản phẩm theo nhu cầu của khách
+	List<Product> listProducts(Integer category_id, Integer brand_id);
 }

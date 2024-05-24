@@ -33,38 +33,38 @@
 						<div class="form-group">
 							<label for="productName">Tên Sản Phẩm</label>
 							<input type="text" class="form-control" id="productName" name="productName"
-								placeholder="Nhập tên sản phẩm">
+								placeholder="Nhập tên sản phẩm" required>
 						</div>
 						<div class="form-group">
 							<label for="productPrice">Giá Sản Phẩm</label>
 							<input type="number" class="form-control" id="productPrice" name="productPrice"
-								placeholder="Nhập giá sản phẩm">
+								placeholder="Nhập giá sản phẩm" required>
 						</div>
 						<div class="form-group">
 							<label for="productVersion">Phiên Bản</label>
 							<input type="text" class="form-control" id="productVersion" name="productVersion"
-								placeholder="Nhập phiên bản sản phẩm">
+								placeholder="Nhập phiên bản sản phẩm" required>
 						</div>
 						<div class="form-group">
 							<label for="productCategory">Danh Mục</label>
-							<select class="form-control productCategory" id="productCategory" name="productCategory">
+							<select class="form-control productCategory" id="productCategory" name="productCategory" required>
 								<!-- Các option danh mục sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="productBrand">Thương Hiệu</label>
-							<select class="form-control productBrand" id="productBrand" name="productBrand">
+							<select class="form-control productBrand" id="productBrand" name="productBrand" required>
 								<!-- Các option thương hiệu sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="productImages">Ảnh Sản Phẩm</label>
-							<input type="file" class="form-control" id="productImages" name="productImages" multiple>
+							<input type="file" class="form-control" id="productImages" name="productImages" multiple required>
 						</div>
 						<div class="form-group">
 							<label for="productDescription">Mô tả Sản Phẩm</label>
 							<textarea class="form-control" id="productDescription" name="productDescription" rows="3"
-								placeholder="Nhập mô tả sản phẩm"></textarea>
+								placeholder="Nhập mô tả sản phẩm" required></textarea>
 						</div>
 						<!-- Thêm các trường khác cho thông tin sản phẩm -->
 						<!-- Footer của modal -->
@@ -99,27 +99,27 @@
 						<div class="form-group">
 							<label for="editProductName">Tên Sản Phẩm</label>
 							<input type="text" class="form-control" id="editProductName" name="productName"
-								placeholder="Nhập tên sản phẩm">
+								placeholder="Nhập tên sản phẩm" required>
 						</div>
 						<div class="form-group">
 							<label for="editProductPrice">Giá Sản Phẩm</label>
 							<input type="number" class="form-control" id="editProductPrice" name="productPrice"
-								placeholder="Nhập giá sản phẩm">
+								placeholder="Nhập giá sản phẩm" required>
 						</div>
 						<div class="form-group">
 							<label for="editProductVersion">Phiên Bản</label>
 							<input type="text" class="form-control" id="editProductVersion" name="productVersion"
-								placeholder="Nhập phiên bản sản phẩm">
+								placeholder="Nhập phiên bản sản phẩm" required>
 						</div>
 						<div class="form-group">
 							<label for="editProductCategory">Danh Mục</label>
-							<select class="form-control productCategory" id="editProductCategory" name="productCategory">
+							<select class="form-control productCategory" id="editProductCategory" name="productCategory" required>
 								<!-- Các option danh mục sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="editProductBrand">Thương Hiệu</label>
-							<select class="form-control productBrand" id="editProductBrand" name="productBrand">
+							<select class="form-control productBrand" id="editProductBrand" name="productBrand" required>
 								<!-- Các option thương hiệu sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
@@ -233,7 +233,7 @@
 
 			// Gọi API endpoint để lấy danh sách thương hiệu từ máy chủ khi mở modal
 			$.ajax({
-				url: '/brand',
+				url: '/brands',
 				type: 'GET',
 				dataType: 'json',
 				success: function (response) {
