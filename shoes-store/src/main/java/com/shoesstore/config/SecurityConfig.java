@@ -26,7 +26,7 @@ public class SecurityConfig {
 			auth.requestMatchers("/auth/**").permitAll();
 			auth.requestMatchers("/signed-in").permitAll();
 			auth.requestMatchers("/admin/**").hasAnyAuthority("admin");
-			
+			auth.requestMatchers("/product/images/**").permitAll();
 			auth.anyRequest().authenticated();
 			
 

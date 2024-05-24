@@ -84,4 +84,6 @@ public class HomeController {
 		 
 		return ResponseEntity.ok().body(brands);
     }
+	
+	
 }
