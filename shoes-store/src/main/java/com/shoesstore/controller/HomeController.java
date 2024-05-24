@@ -93,8 +93,10 @@ public class HomeController {
 	}
 
 	@GetMapping("/product-listing")
-	public String showProductLis(Model model, @RequestParam(name = "categoryId", required = false) Integer category_id,
-			@RequestParam(name = "brandId", required = false) Integer brand_id) {
+	public String showProductLis(Model model,@RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "name", required = false) String name, @RequestParam(name = "categoryId", required = false) Integer category_id,
+			@RequestParam(name = "brandId", required = false) Integer brand_id, @RequestParam(value = "priceMin", required = false) Double minPrice,
+            @RequestParam(value = "priceMax", required = false) Double maxPrice) {
 		List<Brand> brands = brandService.getAllBrands();
 		List<Category> categories = categoryService.getAllCategories();
 		model.addAttribute("categories", categories);
@@ -112,8 +114,8 @@ public class HomeController {
 			category = categoryService.getCategoryById(category_id).get();
 		}
 		model.addAttribute("category",category);
-		List<Product> productList = productService.listProducts(category_id, brand_id);
-		if (productList!= null && productList.size() > 0 ) model.addAttribute("products", productList);
+		List<Product> productList = productService.getFilteredProducts("Đang bán", name, category_id, brand_id, minPrice, maxPrice);
+		 model.addAttribute("products", productList);
 		
 		return "shopper/product-list";
 	}

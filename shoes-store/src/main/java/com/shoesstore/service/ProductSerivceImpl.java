@@ -34,14 +34,8 @@ public class ProductSerivceImpl implements ProductService {
 	public List<Product> getProducts(String status, String name) {
 		if (status == null && name == null)
 			return productRepository.findAllByDeleted(false);
-		Specification<Product> spec = Specification.where(null);
-		if (status != null) {
-			spec = spec.and(ProductSpecifications.hasStatus(status));
-		}
-		if (name != null) {
-			spec = spec.and(ProductSpecifications.hasName(name));
-		}
-		return productRepository.findAll(spec);
+		Specification<Product> specs = Specification.where(ProductSpecifications.findAllByCriteria(status, name, null, null, null, null));
+		return productRepository.findAll(specs);
 	};
 
 	@Override
@@ -142,5 +136,12 @@ public class ProductSerivceImpl implements ProductService {
 	
 
 	}
+	@Override
+	public List<Product> getFilteredProducts(String status, String name, Integer categoryId, Integer brandId, Double minPrice, Double maxPrice) {
+        
+		Specification<Product> specs = Specification.where(ProductSpecifications.findAllByCriteria(status, name, categoryId, brandId, minPrice, maxPrice));
+        
+        return productRepository.findAll(specs);
+    }
 
 }

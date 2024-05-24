@@ -1,6 +1,7 @@
 package com.shoesstore.service;
 import java.util.List;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.multipart.MultipartFile;
 
 import  com.shoesstore.model.Product;
@@ -19,4 +20,7 @@ public interface ProductService {
 			int brandId, String description, List<MultipartFile> productImages, List<Integer> deletedImages);
 	//lọc sản phẩm theo nhu cầu của khách
 	List<Product> listProducts(Integer category_id, Integer brand_id);
+	
+	public List<Product> getFilteredProducts(String status, String name, Integer categoryId, Integer brandId, Double minPrice, Double maxPrice) ;
+
 }
