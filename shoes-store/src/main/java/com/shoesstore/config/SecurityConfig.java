@@ -27,6 +27,8 @@ public class SecurityConfig {
 			auth.requestMatchers("/signed-in").permitAll();
 			auth.requestMatchers("/admin/**").hasAnyAuthority("admin");
 			auth.requestMatchers("/product/images/**").permitAll();
+			auth.requestMatchers("/brands").permitAll();
+			auth.requestMatchers("/product-listing").permitAll();
 			auth.anyRequest().authenticated();
 			
 
