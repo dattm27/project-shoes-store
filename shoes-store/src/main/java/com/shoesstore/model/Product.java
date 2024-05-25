@@ -1,5 +1,6 @@
 package com.shoesstore.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,8 +49,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Chỉ định đây là phía "quản lý" của quan hệ - tránh lỗi vòng lặp JSON
     private List<ProductImage> images;
-
-
+    
+    //Một sản phẩm có nhiều size
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProductSize> sizes; // Thêm ánh xạ cho ProductSize
+    
 	public Long getId() {
 		return id;
 	}
@@ -142,9 +147,25 @@ public class Product {
 		return images;
 	}
 
-//	public void setImages(List<ProductImage> images) {
-//		this.images = images;
-//	}
+	public void setImages(List<ProductImage> images) {
+		this.images = images;
+	}
+
+	public List<ProductSize> getSizes() {
+		return sizes;
+	}
+
+	public void setSizes(List<ProductSize> sizes) {
+		this.sizes = sizes;
+	}
+	
+	public void addSize(ProductSize productSize) {
+	    if (this.sizes == null) {
+	        this.sizes = new ArrayList<>();
+	    }
+	    this.sizes.add(productSize);
+	    productSize.setProduct(this);
+	}
 	
     // Constructors, getters, setters
 }

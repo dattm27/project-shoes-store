@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.shoesstore.model.Brand;
 import com.shoesstore.model.Category;
 import com.shoesstore.model.Product;
+import com.shoesstore.model.ProductSize;
 import com.shoesstore.service.BrandService;
 import com.shoesstore.service.CategoryService;
 import com.shoesstore.service.ProductImageService;
@@ -45,7 +47,8 @@ public class ProductController {
 	public ResponseEntity<?> createProduct(@RequestParam("productName") String productName,
 			@RequestParam("productPrice") double productPrice, @RequestParam("productVersion") String productVersion,
 			@RequestParam("productCategory") int categoryId, @RequestParam("productBrand") int brandId,
-			@RequestParam("productImages") List<MultipartFile> productImages, @RequestParam("productDescription") String description) {
+			@RequestParam("productImages") List<MultipartFile> productImages,
+			@RequestParam("productDescription") String description, @RequestParam Map<String, String> sizes) {
 		// Tạo mới sản phẩm và lưu vào cơ sở dữ liệu
 		Product product = new Product();
 		product.setName(productName);
@@ -64,6 +67,20 @@ public class ProductController {
 		product.setCategory(category);
 		product.setBrand(brand);
 
+		// Xử lý lưu trữ size và số lượng
+		for (Map.Entry<String, String> entry : sizes.entrySet()) {
+			if (entry.getKey().startsWith("size")) {
+				int size = Integer.parseInt(entry.getKey().substring(6, 8)); // lấy số size từ tên tham số
+				int quantity = Integer.parseInt(entry.getValue());
+
+				// Tạo và lưu đối tượng ProductSize
+				ProductSize productSize = new ProductSize();
+				productSize.setProduct(product);
+				productSize.setSize(String.valueOf(size));
+				productSize.setQuantity(quantity);
+				product.addSize(productSize); // phương thức này cần được thêm vào lớp Product
+			}
+		}
 		// Lưu sản phẩm vào cơ sở dữ liệu
 		Product savedProduct = productService.createProduct(product);
 
@@ -136,18 +153,22 @@ public class ProductController {
 		String contentType = Files.probeContentType(imagePath);
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
 	}
-	
-	//chuyển logic xử lý cập nhật vào service làm
-	@PostMapping("/update")
-    public ResponseEntity<?> updateProduct(@RequestParam("productId") int productId,@RequestParam("productName") String productName,
-			@RequestParam("productPrice") double productPrice, @RequestParam("productVersion") String productVersion,
-			@RequestParam("productCategory") int categoryId, @RequestParam("productBrand") int brandId, @RequestParam("productDescription") String description,
-			@RequestParam("productImages") List<MultipartFile> productImages, @RequestParam(name = "deletedImages", required =false) List<Integer> deletedImages)  {
-        // Xử lý cập nhật thông tin sản phẩm và xoá các ảnh đã cho
-        productService.updateProduct(productId, productName, productPrice, productVersion, categoryId, brandId, description, productImages, deletedImages);
 
-        // Trả về phản hồi thành công
-        return ResponseEntity.ok("Product updated successfully");
-    }
+	// chuyển logic xử lý cập nhật vào service làm
+	@PostMapping("/update")
+	public ResponseEntity<?> updateProduct(@RequestParam("productId") int productId,
+			@RequestParam("productName") String productName, @RequestParam("productPrice") double productPrice,
+			@RequestParam("productVersion") String productVersion, @RequestParam("productCategory") int categoryId,
+			@RequestParam("productBrand") int brandId, @RequestParam("productDescription") String description,
+			@RequestParam("productImages") List<MultipartFile> productImages,
+			@RequestParam(name = "deletedImages", required = false) List<Integer> deletedImages, @RequestParam Map<String, String> sizes) {
+		
+		//Xu ly cap nhat
+		productService.updateProduct(productId, productName, productPrice, productVersion, categoryId, brandId,
+				description, productImages, deletedImages, sizes);
+
+		// Trả về phản hồi thành công
+		return ResponseEntity.ok("Product updated successfully");
+	}
 
 }

@@ -22,6 +22,7 @@ import com.shoesstore.model.Product;
 import com.shoesstore.service.BrandService;
 import com.shoesstore.service.CategoryService;
 import com.shoesstore.service.ProductService;
+import com.shoesstore.service.ProductSizeService;
 import com.shoesstore.service.UserService;
 
 @Controller
@@ -34,6 +35,9 @@ public class HomeController {
 
 	@Autowired
 	private BrandService brandService;
+	
+	@Autowired
+	private ProductSizeService productSizeService;
 
 	@Autowired
 	private ProductService productService;
@@ -96,7 +100,7 @@ public class HomeController {
 	public String showProductLis(Model model,@RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "name", required = false) String name, @RequestParam(name = "categoryId", required = false) Integer category_id,
 			@RequestParam(name = "brandId", required = false) Integer brand_id, @RequestParam(value = "priceMin", required = false) Double minPrice,
-            @RequestParam(value = "priceMax", required = false) Double maxPrice) {
+            @RequestParam(value = "priceMax", required = false) Double maxPrice,  @RequestParam(value = "size", required = false) String size) {
 		List<Brand> brands = brandService.getAllBrands();
 		List<Category> categories = categoryService.getAllCategories();
 		model.addAttribute("categories", categories);
@@ -114,8 +118,10 @@ public class HomeController {
 			category = categoryService.getCategoryById(category_id).get();
 		}
 		model.addAttribute("category",category);
-		List<Product> productList = productService.getFilteredProducts("Đang bán", name, category_id, brand_id, minPrice, maxPrice);
+		List<Product> productList = productService.getFilteredProducts("Đang bán", name, category_id, brand_id, minPrice, maxPrice, size);
 		 model.addAttribute("products", productList);
+		 
+		 model.addAttribute("sizes",  productSizeService.getAllSizes());
 		
 		return "shopper/product-list";
 	}
@@ -128,6 +134,7 @@ public class HomeController {
 		model.addAttribute("categories", categories);
 		model.addAttribute("brands", brands);
 		model.addAttribute("products",products);
+		model.addAttribute("sizes",  productSizeService.getAllSizes());
 		return "shopper/product-list";
 	}
 

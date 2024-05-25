@@ -47,7 +47,8 @@
 						</div>
 						<div class="form-group">
 							<label for="productCategory">Danh Mục</label>
-							<select class="form-control productCategory" id="productCategory" name="productCategory" required>
+							<select class="form-control productCategory" id="productCategory" name="productCategory"
+								required>
 								<!-- Các option danh mục sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
@@ -59,24 +60,35 @@
 						</div>
 						<div class="form-group">
 							<label for="productImages">Ảnh Sản Phẩm</label>
-							<input type="file" class="form-control" id="productImages" name="productImages" multiple required>
+							<input type="file" class="form-control" id="productImages" name="productImages" multiple
+								required>
 						</div>
 						<div class="form-group">
 							<label for="productDescription">Mô tả Sản Phẩm</label>
 							<textarea class="form-control" id="productDescription" name="productDescription" rows="3"
 								placeholder="Nhập mô tả sản phẩm" required></textarea>
 						</div>
-						<!-- Thêm các trường khác cho thông tin sản phẩm -->
-						<!-- Footer của modal -->
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-							<button type="submit" class="btn btn-primary">Lưu</button>
-						</div>
-					</form>
-				</div>
 
+						<!-- Thêm các trường nhập liệu cho số lượng đôi giày theo từng size -->
+
+						<div class="form-group">
+							<label>Số Lượng Đôi Giày Theo Kích Cỡ</label>
+							<div id="sizeQuantityFields" class="container">
+								<!-- Các trường input sẽ được thêm bằng JavaScript -->
+							</div>
+						</div>
+
+				</div>
+				<!-- Footer của modal -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+					<button type="submit" class="btn btn-primary">Lưu</button>
+				</div>
+				</form>
 			</div>
+
 		</div>
+	</div>
 	</div>
 	<!--modal để chỉnh sửa thông tin sản phẩm-->
 	<!-- Modal chỉnh sửa sản phẩm -->
@@ -113,13 +125,15 @@
 						</div>
 						<div class="form-group">
 							<label for="editProductCategory">Danh Mục</label>
-							<select class="form-control productCategory" id="editProductCategory" name="productCategory" required>
+							<select class="form-control productCategory" id="editProductCategory" name="productCategory"
+								required>
 								<!-- Các option danh mục sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="editProductBrand">Thương Hiệu</label>
-							<select class="form-control productBrand" id="editProductBrand" name="productBrand" required>
+							<select class="form-control productBrand" id="editProductBrand" name="productBrand"
+								required>
 								<!-- Các option thương hiệu sẽ được thêm bằng JavaScript -->
 							</select>
 						</div>
@@ -137,8 +151,14 @@
 						</div>
 						<div class="form-group">
 							<label for="editProductDescription">Mô tả Sản Phẩm</label>
-							<textarea class="form-control" id="editProductDescription" name="productDescription" rows="3"
-								placeholder="Nhập mô tả sản phẩm"></textarea>
+							<textarea class="form-control" id="editProductDescription" name="productDescription"
+								rows="3" placeholder="Nhập mô tả sản phẩm"></textarea>
+						</div>
+						<div class="form-group">
+							<label>Số Lượng Đôi Giày Theo Kích Cỡ</label>
+							<div class="row" id="editProductSizes">
+								<!-- Các trường input cho size sẽ được thêm bằng JavaScript -->
+							</div>
 						</div>
 						<!-- Footer của modal -->
 						<div class="modal-footer">
@@ -318,6 +338,30 @@
 						currentImagesContainer.append(imageElement);
 					});
 
+
+					// Hiển thị số lượng theo size hiện tại
+					var sizesContainer = $('#editProductSizes');
+					sizesContainer.empty();
+					let i = 0;
+					for (let size = 37; size <= 49; size++) {
+						let s = product.sizes[i] || ''; // Lấy số lượng từ product.sizes hoặc để trống nếu không có
+						let quantity = '';
+						if (s != '' && size == s.size ){
+							quantity = s.quantity;
+							i++;
+						}
+						console.log(quantity);
+						var sizeElement = `
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="editSize${size}">Size ${size}</label>
+                                <input type="number" class="form-control size-input" id="editSize${size}" name="sizes[${size}]" value="${quantity}" placeholder="Số lượng">
+                            </div>
+                        </div>`;
+						sizesContainer.append(sizeElement);
+					}
+
+
 					// Hiển thị modal chỉnh sửa sản phẩm
 					$('#editProductModal').modal('show');
 				},
@@ -348,12 +392,23 @@
 				event.preventDefault();
 
 				var form = $('#editProductForm')[0];
+				const sizeInputs = form.querySelectorAll(".size-input");
+
+				sizeInputs.forEach(input => {
+					if (!input.value) {
+						input.disabled = true;
+					}
+				});
 				var formData = new FormData(form);
+				
+				
 
 				// Thêm danh sách những ảnh đã xoá vào FormData
 				deletedImages.forEach(function (image) {
 					formData.append('deletedImages[]', JSON.stringify(image));
 				});
+				
+				
 
 				// Gửi AJAX POST request đến endpoint xử lý tạo mới sản phẩm
 				$.ajax({
@@ -382,7 +437,45 @@
 		});
 	</script>
 
+	<script>
+		// Tạo các trường input cho size và quantity theo hàng ngang
+		document.addEventListener("DOMContentLoaded", function () {
+			const sizes = [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49];
+			const sizeQuantityFields = document.getElementById("sizeQuantityFields");
 
+			for (let i = 0; i < sizes.length; i += 3) {
+				const row = document.createElement("div");
+				row.classList.add("row");
+
+				for (let j = 0; j < 3; j++) {
+					if (i + j < sizes.length) {
+						const col = document.createElement("div");
+						col.classList.add("col-md-4");
+
+						col.innerHTML = `
+                        <div class="form-group">
+                            <label for="size${sizes[i + j]}">Size ${sizes[i + j]}</label>
+                            <input type="number" class="form-control size-input" id="size${sizes[i + j]}" name="sizes[${sizes[i + j]}]" placeholder="Số lượng">
+                        </div>
+                    `;
+						row.appendChild(col);
+					}
+				}
+				sizeQuantityFields.appendChild(row);
+			}
+		});
+
+		document.getElementById("addProductForm").addEventListener("submit", function (event) {
+			const form = event.target;
+			const sizeInputs = form.querySelectorAll(".size-input");
+
+			sizeInputs.forEach(input => {
+				if (!input.value) {
+					input.disabled = true;
+				}
+			});
+		});
+	</script>
 </body>
 
 <!-- end::Body -->

@@ -1,53 +1,68 @@
 package com.shoesstore.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.JoinType;
+import org.springframework.data.jpa.domain.Specification;
+import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.data.jpa.domain.Specification;
-
 import com.shoesstore.model.Product;
+import com.shoesstore.model.ProductSize;
 
-//cụ thể hoá các yêu cầu tìm kiếm sản phẩm
 public class ProductSpecifications {
 
-	public static Specification<Product> findAllByCriteria(String status, String name, Integer categoryId,
-			Integer brandId, Double minPrice, Double maxPrice) {
-		return (root, query, criteriaBuilder) -> {
-			List<Predicate> predicates = new ArrayList<>();
+    private final EntityManager entityManager;
 
-			if (status != null && !status.isEmpty()) {
-				predicates.add(criteriaBuilder.equal(root.get("status"), status));
-			}
+    public ProductSpecifications(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-			if (name != null && !name.isEmpty()) {
-				predicates.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
-			}
+    public static Specification<Product> findAllByCriteria(String status, String name, Integer categoryId,
+                                                    Integer brandId, Double minPrice, Double maxPrice, String size) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-			if (categoryId != null) {
-				predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
-			}
+            if (status != null && !status.isEmpty()) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            }
 
-			if (brandId != null) {
-				predicates.add(criteriaBuilder.equal(root.get("brand").get("id"), brandId));
-			}
+            if (name != null && !name.isEmpty()) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
+            }
 
-			if (minPrice != null) {
-				predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
-			}
+            if (categoryId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
+            }
 
-			if (maxPrice != null) {
-				predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
-			}
+            if (brandId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("brand").get("id"), brandId));
+            }
 
-			// Thêm điều kiện sản phẩm chưa bị xoá
-			predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+            if (minPrice != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+            }
 
-			return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-		};
-	}
+            if (maxPrice != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            }
+
+            if (size != null && !size.isEmpty()) {
+                Join<Product, ProductSize> sizesJoin = root.join("sizes", JoinType.INNER);
+
+                Predicate sizePredicate = criteriaBuilder.equal(sizesJoin.get("size"), size);
+                Predicate quantityPredicate = criteriaBuilder.gt(sizesJoin.get("quantity"), 0);
+
+                predicates.add(sizePredicate);
+                predicates.add(quantityPredicate);
+            }
+
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 }
