@@ -37,7 +37,7 @@
 						<tr th:each="cartItem : ${cartItems}" th:with="product = ${cartItem.productSize.product}">
 							<td>
 								<div class="tt-product-img">
-									<img src="images/loader.svg" th:data-src="${product.primaryImage()}" alt="">
+									<img  src ="images/loader.svg"	th:src="@{/images/{imageUrl}(imageUrl=${product.images[0].imageUrl})}"  alt="" >
 								</div>
 							</td>
 							<td>
@@ -46,26 +46,26 @@
 								</h2>
 								<ul class="tt-list-description">
 									<li>Size: <span th:text="${cartItem.productSize.size}"></span></li>
-									<li>Version: <span th:text="${product.versionName}"></span></li>
+									<li>Version: <span th:text="${product.version}"></span></li>
 								</ul>
 								<ul class="tt-list-parameters">
 									<li>
-										<div class="tt-price" th:text="${product.formatPrice()}">
+										<div class="tt-price" th:text="${product.price}">
 											price mobile
 										</div>
 									</li>
 									<li>
-										<div class="detach-quantity-mobile"></div>
+										<div class="detach-quantity-mobile"   th:text="${cartItem.quantity}" ></div>
 									</li>
 									<li>
-										<div class="tt-price subtotal" th:text="${cartItem.formatPrice(product.price * cartItem.quantity)}">
+										<div class="tt-price subtotal" th:text="${product.price * cartItem.quantity}">
 											sub total mobile
 										</div>
 									</li>
 								</ul>
 							</td>
 							<td>
-								<div class="tt-price" th:text="${product.formatPrice()}">
+								<div class="tt-price" th:text="${product.price}">
 									price
 								</div>
 							</td>
@@ -81,7 +81,7 @@
 								</div>
 							</td>
 							<td>
-								<div class="tt-price subtotal" th:text="${cartItem.formatPrice(product.price * cartItem.quantity)}" >
+								<div class="tt-price subtotal" th:text="${product.price * cartItem.quantity}" >
 									sub total
 								</div>
 							</td>
