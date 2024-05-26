@@ -81,8 +81,8 @@ function getCartHeaederContent() {
 		]
 	})
 	.done(function (res) {
-		$('#cart-header-layout').html(res);
-		$('#cartTotalQuantity').text($('#totalQuantityInput').val());
+		/*$('#cart-header-layout').html(res);*/
+		$('#cartTotalQuantity').text(res);
 	})
 	.fail(function () {
 		console.error("Error routing page");

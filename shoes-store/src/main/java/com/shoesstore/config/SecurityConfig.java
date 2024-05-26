@@ -25,12 +25,14 @@ public class SecurityConfig {
 			auth.requestMatchers("/index").permitAll();
 			auth.requestMatchers("/search").permitAll();
 			auth.requestMatchers("/shopper/**").permitAll();
+			auth.requestMatchers("/product-details/**").permitAll();
 			auth.requestMatchers("/auth/**").permitAll();
 			auth.requestMatchers("/signed-in").permitAll();
 			auth.requestMatchers("/admin/**").hasAnyAuthority("admin");
-			auth.requestMatchers("/product/images/**").permitAll();
+			auth.requestMatchers("/images/**").permitAll();
 			auth.requestMatchers("/brands").permitAll();
 			auth.requestMatchers("/product-listing").permitAll();
+			
 			auth.anyRequest().authenticated();
 			
 

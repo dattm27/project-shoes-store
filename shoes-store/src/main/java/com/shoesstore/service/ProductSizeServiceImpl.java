@@ -15,5 +15,10 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 	public List<String> getAllSizes() {	
 		return productSizeRepository.findDistinctSizes();
 	}
+	@Override
+	public ProductSize getSizeById(int id) {
+		
+		return productSizeRepository.findById(id).get();
+	}
 
 }

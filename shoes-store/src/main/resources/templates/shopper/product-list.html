@@ -201,11 +201,11 @@
 												th:classappend="${product.isWishList} ? 'active' : ''"
 												data-tposition="left"></a>
 											<input class="productBoxId" type="hidden" th:value="${product.id}">
-											<a th:href="@{/product/} + ${product.id}">
+											<a th:href="@{/product-details/} + ${product.id}">
 												<!-- Hình ảnh chính của sản phẩm -->
 												<span class="tt-img">
 													<img src="shopper/images/loader.svg"
-														th:data-src="@{/product/images/{imageUrl}(imageUrl=${product.images[0].imageUrl})}"
+														th:data-src="@{/images/{imageUrl}(imageUrl=${product.images[0].imageUrl})}"
 														alt="">
 												</span>
 
@@ -213,7 +213,7 @@
 												<span class="tt-img-roll-over"
 													th:each="image, iter : ${product.images}">
 													<img th:if="${iter.index == 1}" src="images/loader.svg"
-														th:data-src="@{/product/images/{imageUrl}(imageUrl=${image.imageUrl})}"
+														th:data-src="@{/images/{imageUrl}(imageUrl=${image.imageUrl})}"
 														alt="">
 												</span>
 											</a>
@@ -232,7 +232,7 @@
 													<i class="icon-star-empty"></i>
 												</div>
 											</div>
-											<h2 class="tt-title"><a th:href="@{/product/} + ${product.id}">
+											<h2 class="tt-title"><a th:href="@{/product-details/} + ${product.id}">
 													<td th:text="${product.name + ' - ' + product.version}"></td>
 												</a>
 											</h2>

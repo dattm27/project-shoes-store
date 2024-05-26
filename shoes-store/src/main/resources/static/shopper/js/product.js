@@ -2,7 +2,7 @@ $('ul.size_list li.size_number:eq(0)').addClass('active');
 
 if ($('.productSizeId').length > 0) {
 	let sizeId = $('.productSizeId:eq(0)').val();
-	$('#addToCart').attr('href', '/add-to-cart-header/' + sizeId);
+	$('#addToCart').attr('href', '/add-to-cart?size_id=' + sizeId);
 
 } else {
 	
@@ -11,25 +11,27 @@ if ($('.productSizeId').length > 0) {
 $('.size_number').click(function (e) { 
     e.preventDefault();
     let sizeId = $(this).children('.productSizeId').val();
-    $('#addToCart').attr('href', '/add-to-cart-header/' + sizeId);
+    $('#addToCart').attr('href', '/add-to-cart?size_id=' + sizeId);
 });
 
 $('#addToCart').click(function(e) {
     e.preventDefault();
-	let url = $(this).attr('href');
+	let url = $(this).attr('href') + "&product_id="+document.getElementById('productId').value;
     $.ajax({
 		url: '/signed-in',
-		type: 'POST',
+		type: 'GET',
 		dataType: 'html',
 		data: [
 			{ topshoe: 'topshoe' }
 		]
 	})
 	.done(function(res) {
-		if (res != '') {
+		if (res != 'anonymousUser') {
 			addToCart(url);
 		} else {
-			window.location.replace("/customer/login");
+			alert("Vui lòng đăng nhập để tiếp tục");
+			window.location.replace("/sign-in");
+			
 		}
 	})
 	.fail(function() {

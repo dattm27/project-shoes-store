@@ -1,16 +1,24 @@
 package com.shoesstore.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +32,8 @@ import com.shoesstore.service.CategoryService;
 import com.shoesstore.service.ProductService;
 import com.shoesstore.service.ProductSizeService;
 import com.shoesstore.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class HomeController {
@@ -42,7 +52,10 @@ public class HomeController {
 	@Autowired
 	private ProductService productService;
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
+	
+//	url lưu ảnh sản phẩm
+	public static String uploadDirectory = System.getProperty("user.dir") + "/src/main/webapp/products";
+	
 	@RequestMapping("/")
 	public String showHomePage(Model model) {
 		List<Product> productList = productService.getProducts(null, null);
@@ -62,7 +75,13 @@ public class HomeController {
 		return "user-list";
 
 	}
-
+	@RequestMapping("/sign-in")
+	public String showLoginForm(HttpServletRequest request) {
+		
+		return "redirect:/" ;
+	}
+	
+	//check xem có thông tin người dùng đăng nhập chưa
 	@GetMapping("signed-in")
 	@ResponseBody
 	public String checkSignInStatus() {
@@ -95,7 +114,8 @@ public class HomeController {
 
 		return ResponseEntity.ok().body(brands);
 	}
-
+	
+	
 	@GetMapping("/product-listing")
 	public String showProductLis(Model model,@RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "name", required = false) String name, @RequestParam(name = "categoryId", required = false) Integer category_id,
@@ -137,5 +157,24 @@ public class HomeController {
 		model.addAttribute("sizes",  productSizeService.getAllSizes());
 		return "shopper/product-list";
 	}
-
+	
+	
+	@GetMapping("images/{imageUrl}")
+	@ResponseBody
+	public ResponseEntity<Resource> getProductImage(@PathVariable("imageUrl") String url) throws IOException {
+		// Get the image from the company object
+		Path imagePath = Paths.get(uploadDirectory, url);
+		// Fetching the image from that particular path
+		Resource resource = new FileSystemResource(imagePath.toFile());
+		;
+		String contentType = Files.probeContentType(imagePath);
+		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
+	}
+	
+	@GetMapping("product-details/{id}")
+	public String showProductDetails(@PathVariable("id") int id, Model model) {
+		Product product = productService.findById(id);
+		model.addAttribute("product", product);
+		return "shopper/product";
+	}
 }

@@ -142,17 +142,6 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("images/{imageUrl}")
-	@ResponseBody
-	public ResponseEntity<Resource> getProductImage(@PathVariable("imageUrl") String url) throws IOException {
-		// Get the image from the company object
-		Path imagePath = Paths.get(uploadDirectory, url);
-		// Fetching the image from that particular path
-		Resource resource = new FileSystemResource(imagePath.toFile());
-		;
-		String contentType = Files.probeContentType(imagePath);
-		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
-	}
 
 	// chuyển logic xử lý cập nhật vào service làm
 	@PostMapping("/update")

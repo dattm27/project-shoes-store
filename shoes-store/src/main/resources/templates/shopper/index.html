@@ -138,11 +138,11 @@
 								<a href="#" class="tt-btn-wishlist" data-tooltip="Yêu Thích" th:if="${isSignedIn}"
 									th:classappend="${product.isWishList} ? 'active' : ''" data-tposition="left"></a>
 								<input class="productBoxId" type="hidden" th:value="${product.id}">
-								<a th:href="@{/product/} + ${product.id}">
+								<a th:href="@{/product-details/} + ${product.id}">
 									<!-- Hình ảnh chính của sản phẩm -->
 									<span class="tt-img">
 										<img src="shopper/images/loader.svg"
-											th:data-src="@{/product/images/{imageUrl}(imageUrl=${product.images[0].imageUrl})}"
+											th:data-src="@{/images/{imageUrl}(imageUrl=${product.images[0].imageUrl})}"
 											alt="">
 									</span>
 
@@ -164,7 +164,7 @@
 									</ul>
 								</div>
 								<h2 class="tt-title">
-									<a th:href="@{/product/} + ${product.id}" th:text="${product.name}">Name</a>
+									<a th:href="@{/product-details/} + ${product.id}" th:text="${product.name}">Name</a>
 								</h2>
 								<div class="tt-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
 									price
@@ -228,7 +228,7 @@
 							<div class="tt-item" th:each="product : ${newProducts}">
 								<div class="tt-layout-vertical">
 									<div class="tt-img">
-										<a th:href="@{/product/} + ${product.id}">
+										<a th:href="@{/product-details/} + ${product.id}">
 											<span class="tt-img-default"><img src="images/loader.svg"
 													th:data-src="${product.primaryImage()}" alt=""></span>
 											<span class="tt-img-roll-over"
@@ -274,7 +274,7 @@
 											<li><a href="#">TopShoe</a></li>
 										</ul>
 										<h6 class="tt-title"><a th:href="@{/product/} + ${product.id}"
-												th:text="${product.name2()}">name</a></h6>
+												th:text="${product.name}">name</a></h6>
 										<div class="tt-price" th:text="${product.formatPrice()}">
 											price
 										</div>

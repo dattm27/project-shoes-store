@@ -330,7 +330,7 @@
 					product.images.forEach(function (image) {
 						var imageElement = `
                    <div id="imageContainer_${image.id}" class="product-image" style="position: relative; margin: 10px;">
-    <img src="/product/images/${image.imageUrl}" alt="${image.name}" class="img-thumbnail" style="max-width: 150px;">
+    <img src="/images/${image.imageUrl}" alt="${image.name}" class="img-thumbnail" style="max-width: 150px;">
     <button type="button" class="btn btn-danger btn-sm remove-image" style="position: absolute; top: 5px; right: 5px;" data-image-id="${image.id}" data-image-url="${image.imageUrl}">
         &times;
     </button>
