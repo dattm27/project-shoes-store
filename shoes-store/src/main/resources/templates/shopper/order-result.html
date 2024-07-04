@@ -34,11 +34,11 @@
 			<p>
 				<span th:text="${note}"></span>
 				<th:block th:if="${isSuccess}">
-					, mã đơn hàng của bạn: <span class="order_id" th:text="${'#' + orderWeb.getFormatId()}"></span>
+					, mã đơn hàng của bạn: <span class="order_id" th:text="${order_id}"></span>
 				</th:block>
 			</p>
 
-			<a th:href="${'/my-account/order/' + orderWeb.id}" class="btn btn-show-detail">Xem đơn hàng của tôi</a>
+			<a th:href="/" class="btn btn-show-detail">Xem đơn hàng của tôi</a>
 		</div>
 	</div>
 </div>

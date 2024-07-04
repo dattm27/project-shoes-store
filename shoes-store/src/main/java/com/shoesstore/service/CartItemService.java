@@ -10,4 +10,8 @@ public interface CartItemService {
 	public CartItem addCartItem(CartItem cartItem);
 	public void removeCartItem(int cartItemId);
 	public void clearCart(User user) ;
+	public int changeQuantity(int cartItemId, String change);
+	public double calculateSubtotal(int cartItemId);
+	public double calculateTotalAmount(User user);
+	public CartItem getCartItemById(int id) ;
 }

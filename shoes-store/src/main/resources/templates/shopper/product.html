@@ -87,7 +87,7 @@
 									th:text="${product.brand.name + ' ' + product.name + ' - ' + product.version}">
 									Product name</h1>
 								<div class="tt-price">
-									<span class="new-price" th:text="${product.price}">$price</span>
+									<span class="new-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">$price</span>
 									 <span class="old-price"></span> 
 								</div>
 								<div class="tt-review d-none">

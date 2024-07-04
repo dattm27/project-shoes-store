@@ -1,6 +1,8 @@
 package com.shoesstore.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shoesstore.model.CartItem;
+import com.shoesstore.model.User;
 import com.shoesstore.service.CartItemService;
 import com.shoesstore.service.ProductService;
 import com.shoesstore.service.ProductSizeService;
@@ -74,13 +78,62 @@ public class CartController {
 		// Lấy ra người dùng hiện tại
 		com.shoesstore.model.CustomUserDetails currentUser = (com.shoesstore.model.CustomUserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
-		List<CartItem> cartItems= cartItemService.getCartItemsByUser(currentUser.getUser());
+		User user = currentUser.getUser();
+		List<CartItem> cartItems= cartItemService.getCartItemsByUser(user);
+		model.addAttribute("customer", user);
+		model.addAttribute("totalAmount", cartItemService.calculateTotalAmount(user));
 		if (cartItems.size() > 0) {
 			model.addAttribute("cartItems",cartItems);
+			
 			return "shopper/cart";
 		}
 			
 		else
 			return "shopper/empty-cart";
 	}
+	
+	 	@PostMapping("/cart/change-quantity")
+	    public ResponseEntity<?> changeQuantity(@RequestParam("id") int cartItemId,
+	                                            @RequestParam("change") String change) {
+	 		com.shoesstore.model.CustomUserDetails currentUser = (com.shoesstore.model.CustomUserDetails) SecurityContextHolder
+					.getContext().getAuthentication().getPrincipal();
+			User user = currentUser.getUser();
+	        try {
+	        	 int newQuantity = cartItemService.changeQuantity(cartItemId, change);
+	             double subtotal = cartItemService.calculateSubtotal(cartItemId);
+	             double totalAmount = cartItemService.calculateTotalAmount(user);
+	             return ResponseEntity.ok(Map.of("newQuantity", newQuantity, "subtotal", subtotal, "totalAmount", totalAmount));
+	        } catch (Exception e) {
+	            return ResponseEntity.badRequest().body("Failed to update quantity");
+	        }
+	    }
+	 	//Xoá một sản phẩm khỏi cart
+	 	@PostMapping("/cart/remove-cart")
+	 	@ResponseBody
+	 	public Map<String, Object> removeCartItem(@RequestParam(name="id") int id) {
+	 		com.shoesstore.model.CustomUserDetails currentUser = (com.shoesstore.model.CustomUserDetails) SecurityContextHolder
+					.getContext().getAuthentication().getPrincipal();
+			User user = currentUser.getUser();
+	 	    // Xoá cartItem
+	 	    cartItemService.removeCartItem(id);
+
+	 	    // Tính toán totalAmount mới
+	 	    double totalAmount = cartItemService.calculateTotalAmount(user);
+
+	 	    // Trả về JSON với totalAmount mới
+	 	    Map<String, Object> response = new HashMap<>();
+	 	    response.put("totalAmount", totalAmount);
+
+	 	    return response;
+	 	}
+		@GetMapping("/cart/clear")
+		public String clearCart() {
+			com.shoesstore.model.CustomUserDetails currentUser = (com.shoesstore.model.CustomUserDetails) SecurityContextHolder
+					.getContext().getAuthentication().getPrincipal();
+			User user = currentUser.getUser();
+			cartItemService.clearCart(user);
+			return "shopper/empty-cart";
+		}
+		
+		
 }

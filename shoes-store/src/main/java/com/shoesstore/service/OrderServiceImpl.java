@@ -1,0 +1,59 @@
+package com.shoesstore.service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.shoesstore.model.CartItem;
+import com.shoesstore.model.Order;
+import com.shoesstore.model.OrderItem;
+import com.shoesstore.model.User;
+import com.shoesstore.repository.OrderRepository;
+@Service
+public class OrderServiceImpl implements OrderService {
+	@Autowired
+	private OrderRepository orderRepository;
+	@Autowired
+	private CartItemService cartItemService;
+	//lưu order mới
+	@Override
+	public Order createOrder(User user, List<CartItem> cartItems,
+			String recipient, String deliveryAddress, String phoneNumber, String paymentMethod ) {
+		// Tạo đơn hàng mới
+		Order order = new Order();
+		order.setUser(user);
+		order.setCreatedDate(LocalDateTime.now());
+		order.setOrderItems(new ArrayList<>());
+		order.setPaymentStatus("Chưa thanh toán");
+		order.setShippingStatus("Chưa xét duyệt");
+		order.setTotalAmount(cartItemService.calculateTotalAmount(user));
+		order.setPaymentMethod(paymentMethod);
+		order.setDeliveryAddress(deliveryAddress);
+		order.setRecipient(recipient);
+		order.setPhoneNumber(phoneNumber);
+		// Thêm các mục trong giỏ hàng vào đơn hàng
+		for (CartItem cartItem : cartItems) {
+			OrderItem orderItem = new OrderItem();
+			orderItem.setOrder(order);
+			orderItem.setProduct(cartItem.getProductSize().getProduct());
+			orderItem.setSize(cartItem.getProductSize().getSize());
+			orderItem.setQuantity(cartItem.getQuantity());
+			
+
+			order.getOrderItems().add(orderItem);
+		}
+
+		// Lưu đơn hàng vào cơ sở dữ liệu
+		Order savedOrder = orderRepository.save(order);
+		return savedOrder;
+	}
+	@Override
+	public List<Order> getAllOrders() {
+		
+		return orderRepository.findAll();
+	}
+
+}

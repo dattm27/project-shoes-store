@@ -49,7 +49,7 @@ var datatable = $('.kt-datatable').KTDatatable({
 			textAlign: 'center',
 		},
 		{
-			field: 'consignee',
+			field: 'recipient',
 			title: 'Người nhận hàng',
 		},
 		{
@@ -87,11 +87,11 @@ var datatable = $('.kt-datatable').KTDatatable({
 //			title: 'Trạng thái thanh toán',
 //		},
 		{
-			field: 'deliveryStatus',
+			field: 'shippingStatus',
 			title: 'Trạng thái vận chuyển',
 		},
 		{
-			field: 'formatTotalAmount',
+			field: 'totalAmount',
 			title: 'Tổng tiền',
 		},
 		// 					{
