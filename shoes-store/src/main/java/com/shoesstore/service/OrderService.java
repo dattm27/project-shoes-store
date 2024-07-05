@@ -11,4 +11,5 @@ public interface OrderService {
 	public Order createOrder(User user, List<CartItem> cartItems, String recipient, String deliveryAddress, String phoneNumber, String paymentMethod );
 	
 	public List<Order> getAllOrders();
+	public List<Order> getFilteredOrders(String name, String method, String paymenStatus, String shippingStatus);
 }

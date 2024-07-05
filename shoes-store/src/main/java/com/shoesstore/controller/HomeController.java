@@ -115,7 +115,7 @@ public class HomeController {
 		return ResponseEntity.ok().body(brands);
 	}
 	
-	
+	//tìm kiếm theo nhiều yếu tố (lọc sản phẩm ở trang sản phẩm)
 	@GetMapping("/product-listing")
 	public String showProductLis(Model model,@RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "name", required = false) String name, @RequestParam(name = "categoryId", required = false) Integer category_id,

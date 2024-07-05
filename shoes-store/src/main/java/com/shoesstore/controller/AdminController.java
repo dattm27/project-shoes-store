@@ -104,9 +104,19 @@ public class AdminController {
 	//trả về dữ liệu danh sách các đơn hàng
 	@PostMapping("/orders/data")
 	@ResponseBody
-	public List<Order> getOrderData(@RequestParam(name = "query[status]", required = false) String status,
-			@RequestParam(name = "query[]", required = false) String name) {
-		
-		return orderService.getAllOrders();// Trả về danh sách đơn từ Order Service 
+	public List<Order> getOrderData(
+			@RequestParam(name = "query[]", required = false) String name, @RequestParam(name = "query[method]", required= false) String method,@RequestParam(name = "query[delivery]", required = false) String deliveryStatus,
+			@RequestParam(name = "query[payment]", required = false) String paymentStatus) {
+	
+		return orderService.getFilteredOrders(name, method, paymentStatus, deliveryStatus);// Trả về danh sách đơn từ Order Service
 	}
+	
+	//trả về dữ liệu danh sách các đơn hàng
+//		@PostMapping("/orders/data")
+//		@ResponseBody
+//		public List<Order> getOrderData(
+//				) {
+//			return orderService.getAllOrders();
+//			//return orderService.getFilteredOrders(name, method, paymentStatus, deliveryStatus);// Trả về danh sách đơn từ Order Service
+//		}
 }

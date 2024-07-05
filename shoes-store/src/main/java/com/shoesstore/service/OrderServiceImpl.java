@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.shoesstore.model.CartItem;
@@ -12,6 +13,7 @@ import com.shoesstore.model.Order;
 import com.shoesstore.model.OrderItem;
 import com.shoesstore.model.User;
 import com.shoesstore.repository.OrderRepository;
+import com.shoesstore.service.OrderSpecifications;
 @Service
 public class OrderServiceImpl implements OrderService {
 	@Autowired
@@ -50,10 +52,17 @@ public class OrderServiceImpl implements OrderService {
 		Order savedOrder = orderRepository.save(order);
 		return savedOrder;
 	}
+	//lay tat ca cac don hang
 	@Override
 	public List<Order> getAllOrders() {
 		
 		return orderRepository.findAll();
+	}
+	//loc cac don hang theo cac tieu chi
+	@Override
+	public List<Order> getFilteredOrders(String name, String method, String paymenStatus, String shippingStatus) {
+		Specification<Order> specs = Specification.where(OrderSpecifications.findAllByCriteria(name, method, paymenStatus, shippingStatus));
+		return orderRepository.findAll(specs);
 	}
 
 }
