@@ -1,3 +1,4 @@
+
 var datatable = $('.kt-datatable').KTDatatable({
 	// datasource definition
 	data: {
@@ -93,6 +94,7 @@ var datatable = $('.kt-datatable').KTDatatable({
 		{
 			field: 'totalAmount',
 			title: 'Tổng tiền',
+			
 		},
 		// 					{
 		// 						field: 'updatedAt',

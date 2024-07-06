@@ -76,7 +76,7 @@
 			<div class="row delivery_status_action">
 				<div class="col-12 d-none"><h4>Thay đổi trạng thái:</h4></div>
 				<div class="col-12">
-					<button th:each="action : ${actions}" type="button" th:class="${'btn_change_status btn ' + action.class}" th:status="${action.status}" th:text="${action.title}"></button>
+					<button th:each="action : ${actions}" type="button" th:class="${'btn_change_status btn ' + action.classCss}" th:status="${action.status}" th:text="${action.title}"></button>
 					<a href="#" class="btn btn-clean btn-icon-sm undo_action" th:status="${undoAction}" th:if="${undoAction != ''}">
 						<i class="la la-long-arrow-left"></i>
 						Quay lại trạng thái trước
@@ -104,9 +104,9 @@
 					<tr th:each="item : ${order.orderItems}" th:with="product=${item.product}">
 						<td><a th:href="${'/product/' + product.id}" th:text="${product.name}"></a></td>
 						<td th:text="${item.size}"></td>
-						<td th:text="${item.price}"></td>
+						<td th:text="${order.formatedPrice(item.price)}"></td>
 						<td th:text="${item.quantity}"></td>
-						<td align="right" th:text="${order.totalAmount}"></td>
+						<td align="right" th:text="${order.formatedPrice(order.totalAmount)}"></td>
 						<td th:text="${product.version}"></td>
 					</tr>
 				</tbody>

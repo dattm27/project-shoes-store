@@ -71,5 +71,14 @@ public class OrderServiceImpl implements OrderService {
 		
 		return orderRepository.findById(id).get();
 	}
+	@Override
+	public Order updateStatus(int id, String status) {
+		Order order = orderRepository.findById(id).get();
+		if (order!= null ) {
+			order.setShippingStatus(status);
+		}
+		orderRepository.save(order);
+		return order;
+	}
 
 }

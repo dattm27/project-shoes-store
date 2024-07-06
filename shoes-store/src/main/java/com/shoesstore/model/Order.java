@@ -1,8 +1,11 @@
 package com.shoesstore.model;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -140,6 +143,12 @@ public class Order {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	 public static String formatedPrice(double price) {
+	        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+	        symbols.setGroupingSeparator(',');
+	        DecimalFormat formatter = new DecimalFormat("#,###", symbols);
+	        return formatter.format(price) + "đ";
+	    }
 	
 
     

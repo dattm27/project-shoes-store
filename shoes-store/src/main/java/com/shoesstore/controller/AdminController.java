@@ -1,5 +1,6 @@
 package com.shoesstore.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shoesstore.model.Action;
 import com.shoesstore.model.Brand;
 import com.shoesstore.model.Category;
 import com.shoesstore.model.CustomUserDetails;
@@ -117,9 +119,40 @@ public class AdminController {
 	public String viewOrderDetail(@PathVariable("id") int id, Model model) {
 		//lay ra thong tin order 
 		Order order = orderService.getOrderById(id);
+		//tra về nut bấm tương ứng
+		List<Action> actions = new ArrayList<>(); 
+		if (order.getShippingStatus().equalsIgnoreCase("Chưa xét duyệt")) {
+			actions.add(new Action("Duyệt đơn hàng này", "Chờ giao hàng"));
+		}
+		else if (order.getShippingStatus().equalsIgnoreCase("Chờ giao hàng")) {
+			actions.add(new Action("Bắt đầu giao hàng", "Đang giao hàng"));
+		}
+		else if (order.getShippingStatus().equalsIgnoreCase("Đang giao hàng")) {
+			actions.add(new Action("Giao hàng thành công", "Giao hàng thành công"));
+			actions.add(new Action("Giao hàng thất bại, chờ giao lần 2", "Chờ giao hàng lần 2"));
+		}
+		else if (order.getShippingStatus().equalsIgnoreCase("Chờ giao hàng lần 2")) {
+			actions.add(new Action("Giao hàng lần 2", "Đang giao hàng lần 2"));
+		
+		}
+		else if (order.getShippingStatus().equalsIgnoreCase("Đang giao hàng lần 2")) {
+
+			actions.add(new Action("Giao hàng thành công", "Giao hàng thành công"));
+			actions.add(new Action("Giao hàng không thành công", "Đã hủy"));
+		}
 		model.addAttribute(order);
+		model.addAttribute("actions", actions);
 		return "admin/order-detail";
 		
+	}
+	
+	@PostMapping("orders/change-status")
+	@ResponseBody
+	public ResponseEntity<Object>  updateOrderStatus(@RequestParam(name = "status") String status, @RequestParam(name = "id") int id) {
+		Order order = orderService.updateStatus(id, status);
+		if(order != null)
+		return ResponseEntity.ok().build();
+		return ResponseEntity.notFound().build();
 	}
 	
 }
