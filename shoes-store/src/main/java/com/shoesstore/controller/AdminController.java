@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,12 +112,14 @@ public class AdminController {
 		return orderService.getFilteredOrders(name, method, paymentStatus, deliveryStatus);// Trả về danh sách đơn từ Order Service
 	}
 	
-	//trả về dữ liệu danh sách các đơn hàng
-//		@PostMapping("/orders/data")
-//		@ResponseBody
-//		public List<Order> getOrderData(
-//				) {
-//			return orderService.getAllOrders();
-//			//return orderService.getFilteredOrders(name, method, paymentStatus, deliveryStatus);// Trả về danh sách đơn từ Order Service
-//		}
+	//bấm vào xem chi tiết một đơn hàng
+	@PostMapping("orders/detail/{id}")
+	public String viewOrderDetail(@PathVariable("id") int id, Model model) {
+		//lay ra thong tin order 
+		Order order = orderService.getOrderById(id);
+		model.addAttribute(order);
+		return "admin/order-detail";
+		
+	}
+	
 }

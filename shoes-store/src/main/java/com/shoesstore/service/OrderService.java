@@ -12,4 +12,5 @@ public interface OrderService {
 	
 	public List<Order> getAllOrders();
 	public List<Order> getFilteredOrders(String name, String method, String paymenStatus, String shippingStatus);
+	public Order getOrderById(int id);
 }

@@ -13,7 +13,7 @@
 					<i class="kt-font-brand flaticon2-line-chart"></i>
 				</span>
 				<h3 class="kt-portlet__head-title">
-					Đơn Hàng #<span id="order_id" th:text="${orderWeb.id}"></span> - <span th:text="${orderWeb.deliveryStatus}"></span>
+					Đơn Hàng #<span id="order_id" th:text="${order.id}"></span> - <span th:text="${order.shippingStatus}"></span>
 				</h3>
 			</div>
 			<div class="kt-portlet__head-toolbar">
@@ -37,37 +37,37 @@
 				<div class="col-12 col-md-6">
 					<div class="row">
 						<div class="col-5 col-md-4 lbl_title">Người nhận hàng:</div>
-						<div class="col-7 col-md-8" th:text="${orderWeb.consignee}"></div>
+						<div class="col-7 col-md-8" th:text="${order.recipient}"></div>
 					</div>
 				</div>
 				<div class="col-12 col-md-6">
 					<div class="row">
 						<div class="col-5 col-md-4 lbl_title">Số điện thoại:</div>
-						<div class="col-7 col-md-8" th:text="${orderWeb.consigneePhone}"></div>
+						<div class="col-7 col-md-8" th:text="${order.phoneNumber}"></div>
 					</div>
 				</div>
 				<div class="col-12 col-md-6">
 					<div class="row">
 						<div class="col-5 col-md-4 lbl_title">Địa chỉ nhận hàng:</div>
-						<div class="col-7 col-md-8" th:text="${orderWeb.deliveryAddress}"></div>
+						<div class="col-7 col-md-8" th:text="${order.deliveryAddress}"></div>
 					</div>
 				</div>
 				<div class="col-12 col-md-6">
 					<div class="row">
 						<div class="col-5 col-md-4 lbl_title">Hình thức thanh toán:</div>
-						<div class="col-7 col-md-8" th:text="${orderWeb.paymentMethod}">ATM</div>
+						<div class="col-7 col-md-8" th:text="${order.paymentMethod}">ATM</div>
 					</div>
 				</div>
 				<div class="col-12 col-md-6">
 					<div class="row">
 						<div class="col-5 col-md-4 lbl_title">Trạng thái thanh toán:</div>
-						<div class="col-7 col-md-8" th:text="${orderWeb.paymentStatus}">ATM</div>
+						<div class="col-7 col-md-8" th:text="${order.paymentStatus}">ATM</div>
 					</div>
 				</div>
 				<div class="col-12 col-md-6">
 					<div class="row">
 						<div class="col-5 col-md-4 lbl_title">Trạng thái vận chuyển:</div>
-						<div class="col-7 col-md-8" th:text="${orderWeb.deliveryStatus}">ATM</div>
+						<div class="col-7 col-md-8" th:text="${order.shippingStatus}">ATM</div>
 					</div>
 				</div>
 			</div>
@@ -101,13 +101,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="item : ${orderWeb.orderWebDetails}" th:with="product=${item.productSize.Product}">
+					<tr th:each="item : ${order.orderItems}" th:with="product=${item.product}">
 						<td><a th:href="${'/product/' + product.id}" th:text="${product.name}"></a></td>
-						<td th:text="${item.productSize.size}"></td>
-						<td th:text="${orderWeb.formatPrice(item.price)}"></td>
+						<td th:text="${item.size}"></td>
+						<td th:text="${item.price}"></td>
 						<td th:text="${item.quantity}"></td>
-						<td align="right" th:text="${orderWeb.formatPrice(item.totalAmount)}"></td>
-						<td th:text="${product.versionName}"></td>
+						<td align="right" th:text="${order.totalAmount}"></td>
+						<td th:text="${product.version}"></td>
 					</tr>
 				</tbody>
 			</table>

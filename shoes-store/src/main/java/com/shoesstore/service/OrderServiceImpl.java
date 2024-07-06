@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
 			orderItem.setProduct(cartItem.getProductSize().getProduct());
 			orderItem.setSize(cartItem.getProductSize().getSize());
 			orderItem.setQuantity(cartItem.getQuantity());
-			
+			orderItem.setPrice(cartItem.getProductSize().getProduct().getPrice());
 
 			order.getOrderItems().add(orderItem);
 		}
@@ -63,6 +63,13 @@ public class OrderServiceImpl implements OrderService {
 	public List<Order> getFilteredOrders(String name, String method, String paymenStatus, String shippingStatus) {
 		Specification<Order> specs = Specification.where(OrderSpecifications.findAllByCriteria(name, method, paymenStatus, shippingStatus));
 		return orderRepository.findAll(specs);
+	}
+	
+	//tra ve don hang co id id
+	@Override
+	public Order getOrderById(int id) {
+		
+		return orderRepository.findById(id).get();
 	}
 
 }

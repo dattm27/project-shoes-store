@@ -26,6 +26,9 @@ public class OrderItem {
 
     @Column(nullable = false)
     private int quantity;
+    
+    @Column(nullable = false)
+    private double price;
 
     // Constructors, getters, setters
     
@@ -67,6 +70,14 @@ public class OrderItem {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
    
