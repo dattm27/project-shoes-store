@@ -1,6 +1,7 @@
 package com.shoesstore.controller;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,9 +27,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shoesstore.model.Brand;
 import com.shoesstore.model.Category;
+import com.shoesstore.model.CustomUserDetails;
+import com.shoesstore.model.Order;
 import com.shoesstore.model.Product;
+import com.shoesstore.model.User;
 import com.shoesstore.service.BrandService;
 import com.shoesstore.service.CategoryService;
+import com.shoesstore.service.OrderService;
 import com.shoesstore.service.ProductService;
 import com.shoesstore.service.ProductSizeService;
 import com.shoesstore.service.UserService;
@@ -45,29 +50,34 @@ public class HomeController {
 
 	@Autowired
 	private BrandService brandService;
-	
+
 	@Autowired
 	private ProductSizeService productSizeService;
 
 	@Autowired
 	private ProductService productService;
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
+	@Autowired
+	private OrderService orderService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
 //	url lưu ảnh sản phẩm
 	public static String uploadDirectory = System.getProperty("user.dir") + "/src/main/webapp/products";
-	
+
 	@RequestMapping("/")
 	public String showHomePage(Model model) {
 		List<Product> productList = productService.getProducts(null, null);
 		model.addAttribute("products", productList);
 		return "/shopper/index";
 	}
-	
+
 	@RequestMapping("/index")
 	public String showIndex(Model model) {
-	
+
 		return "redirect:/";
 	}
+
 	@GetMapping("user-list")
 	public String showUsers(Model model) {
 		// hien thi danh sach cac user trong he thong
@@ -75,13 +85,14 @@ public class HomeController {
 		return "user-list";
 
 	}
+
 	@RequestMapping("/sign-in")
 	public String showLoginForm(HttpServletRequest request) {
-		
-		return "redirect:/" ;
+
+		return "redirect:/";
 	}
-	
-	//check xem có thông tin người dùng đăng nhập chưa
+
+	// check xem có thông tin người dùng đăng nhập chưa
 	@GetMapping("signed-in")
 	@ResponseBody
 	public String checkSignInStatus() {
@@ -114,51 +125,54 @@ public class HomeController {
 
 		return ResponseEntity.ok().body(brands);
 	}
-	
-	//tìm kiếm theo nhiều yếu tố (lọc sản phẩm ở trang sản phẩm)
+
+	// tìm kiếm theo nhiều yếu tố (lọc sản phẩm ở trang sản phẩm)
 	@GetMapping("/product-listing")
-	public String showProductLis(Model model,@RequestParam(value = "status", required = false) String status,
-            @RequestParam(value = "name", required = false) String name, @RequestParam(name = "categoryId", required = false) Integer category_id,
-			@RequestParam(name = "brandId", required = false) Integer brand_id, @RequestParam(value = "priceMin", required = false) Double minPrice,
-            @RequestParam(value = "priceMax", required = false) Double maxPrice,  @RequestParam(value = "size", required = false) String size) {
+	public String showProductLis(Model model, @RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(name = "categoryId", required = false) Integer category_id,
+			@RequestParam(name = "brandId", required = false) Integer brand_id,
+			@RequestParam(value = "priceMin", required = false) Double minPrice,
+			@RequestParam(value = "priceMax", required = false) Double maxPrice,
+			@RequestParam(value = "size", required = false) String size) {
 		List<Brand> brands = brandService.getAllBrands();
 		List<Category> categories = categoryService.getAllCategories();
 		model.addAttribute("categories", categories);
 		model.addAttribute("brands", brands);
-		//Brand được chọn để lọc
+		// Brand được chọn để lọc
 		Brand brand = null;
 		if (brand_id != null) {
-			 brand = brandService.getBrandById(brand_id).get();
-			
+			brand = brandService.getBrandById(brand_id).get();
+
 		}
 		model.addAttribute("brand", brand);
-		//Category được chọn để lọc
+		// Category được chọn để lọc
 		Category category = null;
 		if (category_id != null) {
 			category = categoryService.getCategoryById(category_id).get();
 		}
-		model.addAttribute("category",category);
-		List<Product> productList = productService.getFilteredProducts("Đang bán", name, category_id, brand_id, minPrice, maxPrice, size);
-		 model.addAttribute("products", productList);
-		 
-		 model.addAttribute("sizes",  productSizeService.getAllSizes());
-		
+		model.addAttribute("category", category);
+		List<Product> productList = productService.getFilteredProducts("Đang bán", name, category_id, brand_id,
+				minPrice, maxPrice, size);
+		model.addAttribute("products", productList);
+
+		model.addAttribute("sizes", productSizeService.getAllSizes());
+
 		return "shopper/product-list";
 	}
-	
+
 	@GetMapping("/search")
-	public String searchProductByName(@RequestParam(name = "q", required = false )String name, Model model) {
+	public String searchProductByName(@RequestParam(name = "q", required = false) String name, Model model) {
 		List<Product> products = productService.getProducts("Đang bán", name);
 		List<Brand> brands = brandService.getAllBrands();
 		List<Category> categories = categoryService.getAllCategories();
 		model.addAttribute("categories", categories);
 		model.addAttribute("brands", brands);
-		model.addAttribute("products",products);
-		model.addAttribute("sizes",  productSizeService.getAllSizes());
+		model.addAttribute("products", products);
+		model.addAttribute("sizes", productSizeService.getAllSizes());
 		return "shopper/product-list";
 	}
-	
-	
+
 	@GetMapping("images/{imageUrl}")
 	@ResponseBody
 	public ResponseEntity<Resource> getProductImage(@PathVariable("imageUrl") String url) throws IOException {
@@ -170,11 +184,76 @@ public class HomeController {
 		String contentType = Files.probeContentType(imagePath);
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
 	}
-	
+
 	@GetMapping("product-details/{id}")
 	public String showProductDetails(@PathVariable("id") int id, Model model) {
 		Product product = productService.findById(id);
 		model.addAttribute("product", product);
 		return "shopper/product";
+	}
+
+	// Hiển thị thông tin cá nhân & danh sách đơn hàng
+	@GetMapping("my-account")
+	public String showAccoundInfonOrder(Model model) {
+		// Lấy thông tin xác thực hiện tại
+
+		CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+
+		User user = currentUser.getUser();
+		
+		List<Order> listOrders = orderService.getOrdersOfUserId(user.getId());
+		model.addAttribute("user", user);
+		model.addAttribute("orders", listOrders);
+		return "shopper/account";
+	}
+
+	// Cập nhật thông tin cá nhân (địa chỉ)
+	@GetMapping("my-account/edit")
+	public String showUpdateInfoPage(Model model) {
+		// Lấy thông tin xác thực hiện tại
+
+		CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+
+		User user = currentUser.getUser();
+
+		model.addAttribute("user", user);
+		return "shopper/account_address_fields";
+	}
+	@PostMapping("my-account/edit")
+	//Xử lý cập nhật thông tin tài khoản
+	public String processUpdateInfo(@RequestParam(name="fullname") String fullname, 
+            @RequestParam(name="phone") String phone, 
+            @RequestParam(name="address") String address, Model model) {
+		CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User user = userService.update(currentUser.getId(), fullname, phone, address) ;
+		if ( user!= null) {
+
+			model.addAttribute("user", user);
+			return "shopper/account_address_fields";
+		}
+		return null;
+		
+			
+	}
+	//chi tiết đơn đặt hàng (huỷ đơn nếu trạng thái của đơn là chưa xét duyệt)
+	@GetMapping("my-account/order/{id}")
+	public String showOrderDetail(@PathVariable("id") int id,Model model) {
+		Order order = orderService.getOrderById(id);
+		if(order.getShippingStatus().equalsIgnoreCase("Chưa xét duyệt")) model.addAttribute("btnCancel", true);
+		model.addAttribute("order", order);
+		return "shopper/order-detail";
+	}
+	
+	
+	//xử lý yêu cầu huỷ đơn từ khách hàng nếu đơn hàng còn ở trạng thái chưa xét duyệt
+	@PostMapping("my-account/order/cancel/{id}")
+	public ResponseEntity<Object> processCancleOrder(@PathVariable("id") int id){
+		Order order = orderService.cancelOrder(id);
+		if(order != null)
+		return ResponseEntity.ok().build();
+		return ResponseEntity.notFound().build();
 	}
 }

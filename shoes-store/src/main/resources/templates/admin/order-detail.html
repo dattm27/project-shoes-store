@@ -18,12 +18,12 @@
 			</div>
 			<div class="kt-portlet__head-toolbar">
 				<div class="kt-portlet__head-wrapper">
-					<a href="#" class="btn btn-clean btn-icon-sm d-none">
+					<a href="#" id="return_to_order_list" class="btn btn-clean btn-icon-sm">
 						<i class="la la-long-arrow-left"></i>
 						Quay lại
 					</a>
 					&nbsp;
-					<div class="dropdown dropdown-inline" th:if="${hasCancelled}">
+					<div class="dropdown dropdown-inline" th:if="${(order.shippingStatus != 'Đã hủy') && (order.shippingStatus != 'Giao hàng thành công') }">
 						<button type="button" class="btn btn-danger btn-icon-sm" id="cancel_order_header">
 							<i class="flaticon2-trash"></i> Hủy đơn hàng
 						</button>
@@ -106,7 +106,7 @@
 						<td th:text="${item.size}"></td>
 						<td th:text="${order.formatedPrice(item.price)}"></td>
 						<td th:text="${item.quantity}"></td>
-						<td align="right" th:text="${order.formatedPrice(order.totalAmount)}"></td>
+						<td align="right" th:text="${order.formatedPrice(item.price, item.quantity)}"></td>
 						<td th:text="${product.version}"></td>
 					</tr>
 				</tbody>

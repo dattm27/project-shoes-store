@@ -94,5 +94,16 @@ public class UserServiceImpl implements UserService {
 			return true;
 		}
 	}
+	//Cập nhật thông tin cá nhân
+	@Override
+	public User update(int id, String fullName, String phone, String address) {
+		User user = userRepository.findById(id).get();
+		user.setFullName(fullName);
+		user.setAddress(address);
+		user.setPhoneNumber(phone);
+		
+	
+		return  userRepository.save(user);
+	}
 
 }

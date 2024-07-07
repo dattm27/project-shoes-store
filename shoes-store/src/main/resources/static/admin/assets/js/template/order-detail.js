@@ -1,5 +1,29 @@
 // swal.fire('Good job!');
 
+// trở về trang danh sách order
+$('#return_to_order_list').click(function(event){
+	event.preventDefault();
+	let url = '/admin/orders';
+	$.ajax({
+		url: url,
+		type: 'POST',
+		dataType: 'html',
+		data: [
+			{ topshoe: 'topshoe' }
+		]
+	})
+	.done(function(res) {
+		$('#router-outlet').html(res);
+		history.pushState('data', 'title', url);
+	})
+	.fail(function() {
+		console.log("error");
+	})
+	.always(function() {
+
+	});
+});
+
 $('#cancel_order_header').click(function(event) {
 	swal.fire({
 	  title: 'Xác nhận hủy đơn hàng này?',
@@ -123,3 +147,4 @@ function view_order_detail(id) {
 
 	});
 }
+

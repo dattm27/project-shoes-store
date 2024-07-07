@@ -15,4 +15,6 @@ public interface UserService {
 	public void sendVerificationCode(User user, String siteURL) throws UnsupportedEncodingException, MessagingException ;
 	//khi người dùng bấm vào link xác thực
 	public boolean verify(String code);
+
+	User update(int id, String fullName, String phone, String address);
 }

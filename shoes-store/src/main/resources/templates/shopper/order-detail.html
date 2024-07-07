@@ -33,8 +33,8 @@
 <!-- 			<h1 class="tt-title-subpages noborder">ORDER DETAIL</h1> -->
 			<div class="tt-shopping-layout">
 				<h2 class="tt-title-border">
-					Đơn hàng #<span th:text="${orderWeb.getFormatId()}" id="order_id"></span> - <span th:text="${orderWeb.deliveryStatus}" id="delivery_status"></span>
-					<span class="ordered_date">Ngày đặt hàng: <span th:text="${orderWeb.createdAt}" class="date">18:31 20/04/2020</span></span>
+					Đơn hàng #<span th:text="${order.id}" id="order_id"></span> - <span th:text="${order.shippingStatus}" id="delivery_status"></span>
+					<span class="ordered_date">Ngày đặt hàng: <span th:text="${order.createdDate}" class="date">18:31 20/04/2020</span></span>
 				</h2>
 				<div class="tt-wrapper">
 					<h3 class="tt-title">Chi tiết</h3>
@@ -50,16 +50,16 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="item : ${orderWeb.orderWebDetails}" th:with="product=${item.productSize.Product}">
-									<td><a th:href="'/product/' + ${product.id}" th:text="${product.name2()}"></a></td>
-									<td th:text="${item.productSize.size}"></td>
-									<td th:text="${orderWeb.formatPrice(item.price)}"></td>
+								<tr th:each="item : ${order.orderItems}" th:with="product=${item.product}">
+									<td><a th:href="'/product/' + ${product.id}" th:text="${product.name}"></a></td>
+									<td th:text="${item.size}"></td>
+									<td th:text="${order.formatedPrice(item.price)}"></td>
 									<td th:text="${item.quantity}"></td>
-									<td th:text="${orderWeb.formatPrice(item.totalAmount)}" class="text-right price"></td>
+									<td th:text="${order.formatedPrice(item.price, item.quantity)}" class="text-right price"></td>
 								</tr>
 								<tr>
 									<td colspan="4" class="lbl_total_amount text-right">Tổng cộng</td>
-									<td th:text="${orderWeb.formatPrice(orderWeb.totalAmount)}" class="total_amount text-right"></td>
+									<td th:text="${order.formatedPrice(order.totalAmount)}" class="total_amount text-right"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -73,28 +73,28 @@
 							<tbody>
 								<tr>
 									<td>Người nhận hàng:</td>
-									<td th:text="${orderWeb.consignee}"></td>
+									<td th:text="${order.recipient}"></td>
 								</tr>
 								<tr>
 									<td>Địa chỉ:</td>
-									<td th:text="${orderWeb.deliveryAddress}"></td>
+									<td th:text="${order.deliveryAddress}"></td>
 								</tr>
 								<tr>
 									<td>Điện thoại:</td>
-									<td th:text="${orderWeb.consigneePhone}"></td>
+									<td th:text="${order.phoneNumber}"></td>
 								</tr>
 								<tr>
 									<td>Hình thức thanh toán:</td>
-									<td th:text="${orderWeb.paymentMethod}"></td>
+									<td th:text="${order.paymentMethod}"></td>
 								</tr>
 								<tr>
 									<td>Trạng thái thanh toán:</td>
-									<td th:text="${orderWeb.paymentStatus}" th:class="${'roboto ' + psColor}"></td>
+									<td th:text="${order.paymentStatus}" th:class="${'roboto ' + psColor}"></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					<a href="javascript:;" th:if="${btnCancel}" id="cancel_order" class="btn btn-border d-none">HỦY ĐƠN HÀNG</a>
+					<a href="javascript:;" th:if="${btnCancel}" id="cancel_order" class="btn btn-border ">HỦY ĐƠN HÀNG</a>
 				</div>
 				
 				

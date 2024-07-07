@@ -13,4 +13,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 	//loc don hang theo cac tieu chi
 	List<Order> findAll(Specification<Order> spec);
 	
+	//lấy ra danh sách order của một người dùng
+	List<Order> findAllByUserIdOrderByIdDesc(int user_id);
+	
 }

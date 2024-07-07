@@ -121,26 +121,32 @@ public class AdminController {
 		Order order = orderService.getOrderById(id);
 		//tra về nut bấm tương ứng
 		List<Action> actions = new ArrayList<>(); 
+		String undoAction = "";
 		if (order.getShippingStatus().equalsIgnoreCase("Chưa xét duyệt")) {
 			actions.add(new Action("Duyệt đơn hàng này", "Chờ giao hàng"));
 		}
 		else if (order.getShippingStatus().equalsIgnoreCase("Chờ giao hàng")) {
 			actions.add(new Action("Bắt đầu giao hàng", "Đang giao hàng"));
+			undoAction = "Chưa xét duyệt";
 		}
 		else if (order.getShippingStatus().equalsIgnoreCase("Đang giao hàng")) {
 			actions.add(new Action("Giao hàng thành công", "Giao hàng thành công"));
 			actions.add(new Action("Giao hàng thất bại, chờ giao lần 2", "Chờ giao hàng lần 2"));
+			undoAction = "Chờ giao hàng";
 		}
 		else if (order.getShippingStatus().equalsIgnoreCase("Chờ giao hàng lần 2")) {
 			actions.add(new Action("Giao hàng lần 2", "Đang giao hàng lần 2"));
+			undoAction = "Đang giao hàng";
 		
 		}
 		else if (order.getShippingStatus().equalsIgnoreCase("Đang giao hàng lần 2")) {
 
 			actions.add(new Action("Giao hàng thành công", "Giao hàng thành công"));
 			actions.add(new Action("Giao hàng không thành công", "Đã hủy"));
+			undoAction = "Chờ giao hàng lần 2";
 		}
 		model.addAttribute(order);
+		if (undoAction != null) model.addAttribute("undoAction", undoAction);
 		model.addAttribute("actions", actions);
 		return "admin/order-detail";
 		
@@ -150,6 +156,15 @@ public class AdminController {
 	@ResponseBody
 	public ResponseEntity<Object>  updateOrderStatus(@RequestParam(name = "status") String status, @RequestParam(name = "id") int id) {
 		Order order = orderService.updateStatus(id, status);
+		if(order != null)
+		return ResponseEntity.ok().build();
+		return ResponseEntity.notFound().build();
+	}
+	
+	@PostMapping("orders/cancel/{id}")
+	@ResponseBody
+	public ResponseEntity<Object>  updateOrderStatus(@PathVariable("id") int id ) {
+		Order order = orderService.cancelOrder(id);
 		if(order != null)
 		return ResponseEntity.ok().build();
 		return ResponseEntity.notFound().build();

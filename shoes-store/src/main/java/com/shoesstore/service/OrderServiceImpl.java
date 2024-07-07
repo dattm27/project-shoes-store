@@ -77,8 +77,22 @@ public class OrderServiceImpl implements OrderService {
 		if (order!= null ) {
 			order.setShippingStatus(status);
 		}
-		orderRepository.save(order);
-		return order;
+		Order saved = orderRepository.save(order);
+		return saved;
+	}
+	@Override
+	public Order cancelOrder(int id) {
+		Order order = orderRepository.findById(id).get();
+		if (order!= null ) {
+			order.setShippingStatus("Đã hủy");
+		}
+		Order saved = orderRepository.save(order);
+		return saved;
+	}
+	@Override
+	public List<Order> getOrdersOfUserId(int user_id) {
+		List<Order>  listOrders= orderRepository.findAllByUserIdOrderByIdDesc(user_id);
+		return listOrders;
 	}
 
 }

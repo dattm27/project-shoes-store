@@ -45,12 +45,12 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="orderWeb : ${orderWebs}">
-									<td><a th:href="${'/my-account/order/' + orderWeb.id}"><span th:text="${'#' + orderWeb.getFormatId()}"></span></a></td>
-									<td th:text="${orderWeb.createdAt}"></td>
-									<td th:text="${orderWeb.paymentStatus}">Processing</td>
-									<td th:text="${orderWeb.deliveryStatus}">Processing</td>
-									<td th:text="${orderWeb.formatPrice(orderWeb.totalAmount)}" class="font-weight-400"></td>
+								<tr th:each="order : ${orders}">
+									<td><a th:href="${'/my-account/order/' + order.id}"><span th:text="${'#' + order.id}"></span></a></td>
+									<td th:text="${order.createdDate}"></td>
+									<td th:text="${order.paymentStatus}">Processing</td>
+									<td th:text="${order.shippingStatus}">Processing</td>
+									<td th:text="${order.formatedPrice(order.totalAmount)}" class="font-weight-400"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -63,7 +63,7 @@
 							<tbody>
 								<tr>
 									<td>Họ tên:</td>
-									<td th:text="${user.name}"></td>
+									<td th:text="${user.fullName}"></td>
 								</tr>
 								<tr>
 									<td>Địa chỉ</td>
@@ -71,7 +71,7 @@
 								</tr>
 								<tr>
 									<td>Số điện thoại</td>
-									<td th:text="${user.phone}"></td>
+									<td th:text="${user.phoneNumber}"></td>
 								</tr>
 								<tr>
 									<td>Email</td>

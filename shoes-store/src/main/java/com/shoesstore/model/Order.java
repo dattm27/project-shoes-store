@@ -149,6 +149,14 @@ public class Order {
 	        DecimalFormat formatter = new DecimalFormat("#,###", symbols);
 	        return formatter.format(price) + "đ";
 	    }
+	 
+	 //tính giá của mỗi mặt hàng thành phần
+	 public static String formatedPrice(double price, int quantity) {
+	        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+	        symbols.setGroupingSeparator(',');
+	        DecimalFormat formatter = new DecimalFormat("#,###", symbols);
+	        return formatter.format(price*quantity) + "đ";
+	    }
 	
 
     

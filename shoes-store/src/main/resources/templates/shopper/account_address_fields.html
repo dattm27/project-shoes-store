@@ -43,9 +43,9 @@
 						<form method="post" action="/my-account/edit">
 							<div class="form-group">
 								<label for="fullname" class="control-label">Họ tên *</label>
-								<input type="text" class="form-control" th:value="${user.name}" name="fullname" id="fullname">
+								<input type="text" class="form-control" th:value="${user.fullName}" name="fullname" id="fullname">
 							</div>
-							<div class="form-group">
+		<!--					<div class="form-group">
 								<input type="radio" id="male" name="gender" value="1" th:checked="${user.gender}">
 								<label for="male" class="control-label">Nam</label>
 								&nbsp;&nbsp;
@@ -55,14 +55,14 @@
 							<div class="form-group">
 								<label for="dateOfBirth" class="control-label">Ngày sinh</label>
 								<input type="date" class="form-control" th:value="${user.dateOfBirth}" name="dateOfBirth" id="dateOfBirth">
-							</div>
+							</div>-->
 							<div class="form-group">
 								<label for="phone" class="control-label">Số điện thoại</label>
-								<input type="text" class="form-control" th:value="${user.phone}" name="phone" id="phone">
+								<input type="text" class="form-control" th:value="${user.phoneNumber}" name="phone" id="phone">
 							</div>
 							<div class="form-group">
 								<label for="phone" class="control-label">Địa chỉ</label>
-								<input type="text" class="form-control" th:value="${user.address}" name="address" id="address">
+								<input type="text" class="form-control" th:value="${user.address}" name="address" id="address" placeholder="Nhập địa chỉ">
 							</div>
 <!-- 							<div class="checkbox-group"> -->
 <!-- 								<input type="checkbox" id="checkBox11" name="checkbox"> -->
