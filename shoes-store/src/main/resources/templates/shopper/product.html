@@ -135,9 +135,9 @@
 								</div>
 								<div class="tt-wrapper">
 									<ul class="tt-list-btn">
-										<li th:if="${isSignedIn}"><a class="btn-link" id="toogle-wishlist" href="#"><i
-													th:class="${product.isWishList} ? 'icon-h-13' : 'icon-n-072'"></i><span
-													th:text="${product.isWishList} ? 'Đã thích' : 'Yêu thích'"></span></a>
+										<li><a class="btn-link" id="toogle-wishlist" href="#"><i
+													th:class="${product.isFavorite} ? 'icon-h-13' : 'icon-n-072'"></i><span
+													th:text="${product.isFavorite} ? 'Đã thích' : 'Yêu thích'"></span></a>
 										</li>
 										<li><a class="btn-link d-none" href="#"><i class="icon-n-08"></i>ADD TO
 												COMPARE</a></li>

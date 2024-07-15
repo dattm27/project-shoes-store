@@ -33,6 +33,7 @@ import com.shoesstore.model.Product;
 import com.shoesstore.model.User;
 import com.shoesstore.service.BrandService;
 import com.shoesstore.service.CategoryService;
+import com.shoesstore.service.FavoriteService;
 import com.shoesstore.service.OrderService;
 import com.shoesstore.service.ProductService;
 import com.shoesstore.service.ProductSizeService;
@@ -59,6 +60,9 @@ public class HomeController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private FavoriteService favoriteService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
@@ -184,10 +188,17 @@ public class HomeController {
 		String contentType = Files.probeContentType(imagePath);
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
 	}
-
+	//trang chi tiết sản phẩm dành cho khách xem
 	@GetMapping("product-details/{id}")
-	public String showProductDetails(@PathVariable("id") int id, Model model) {
-		Product product = productService.findById(id);
+	public String showProductDetails(@PathVariable("id") int productId, Model model) {
+		Product product = productService.findById(productId);
+		// Lấy thông tin xác thực hiện tại
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if ( authentication.isAuthenticated()) {
+			CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			if (favoriteService.isLoved(currentUser.getId(), productId)) product.setFavorite(true);
+		}
 		model.addAttribute("product", product);
 		return "shopper/product";
 	}

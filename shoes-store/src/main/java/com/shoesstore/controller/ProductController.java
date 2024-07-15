@@ -13,12 +13,14 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.shoesstore.model.Brand;
 import com.shoesstore.model.Category;
+import com.shoesstore.model.CustomUserDetails;
 import com.shoesstore.model.Product;
 import com.shoesstore.model.ProductSize;
 import com.shoesstore.service.BrandService;
@@ -159,5 +161,6 @@ public class ProductController {
 		// Trả về phản hồi thành công
 		return ResponseEntity.ok("Product updated successfully");
 	}
-
+	
+	
 }

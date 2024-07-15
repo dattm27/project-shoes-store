@@ -55,6 +55,7 @@ public class Product {
     @JsonManagedReference
     private List<ProductSize> sizes; // Thêm ánh xạ cho ProductSize
     
+    private boolean isFavorite; 
 	public Long getId() {
 		return id;
 	}
@@ -165,6 +166,14 @@ public class Product {
 	    }
 	    this.sizes.add(productSize);
 	    productSize.setProduct(this);
+	}
+
+	public boolean isFavorite() {
+		return isFavorite;
+	}
+
+	public void setFavorite(boolean isFavorite) {
+		this.isFavorite = isFavorite;
 	}
 	
     // Constructors, getters, setters
