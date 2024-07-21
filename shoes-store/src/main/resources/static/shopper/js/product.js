@@ -113,3 +113,82 @@ $('#toogle-wishlist').click(function(event) {
 	}
 	toggleWishlist($('#productId').val());
 });
+
+
+// comment
+// Biến để lưu trữ giá trị rating
+let userRating = 5
+
+// Bắt sự kiện submit để sử dụng giá trị rating khi gửi form
+document.getElementById('comment-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Lấy giá trị từ form, bao gồm userRating
+    const commentText = document.getElementById('comment').value;
+
+    // Gửi dữ liệu (bạn có thể thêm userRating vào data để gửi lên server)
+
+    // Tiến hành hiển thị bình luận (bao gồm userRating) trong danh sách
+    displayComment(userRating, commentText);
+});
+; 
+// Hàm để đặt giá trị rating khi người dùng bấm vào sao
+function setRating(rating) {
+   
+    userRating = rating;
+    
+    // Cập nhật giao diện ngôi sao (ví dụ: làm sao để highlight sao được chọn)
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        star.classList.toggle('selected', index < rating);
+    });
+}
+
+
+// Hàm để trả về chuỗi các ngôi sao tương ứng với rating
+function getRatingStars(rating) {
+    let stars = '';
+    for (let i = 0; i < 5; i++) {
+        stars += i < rating ? '★' : '☆';
+    }
+    return stars;
+}
+
+function addComment() {
+    // Lấy giá trị từ form
+   	const username = document.getElementById('name').value;
+    const commentText = document.getElementById('comment').value;
+
+	    // Tạo một đối tượng Date để lấy thời gian hiện tại
+	    const currentTime = new Date();
+	    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    	const timestamp = `on ${currentTime.toLocaleDateString('en-US', options)}`;
+		
+		
+		    // Lấy giá trị số sao từ biến userRating
+    const rating = userRating;
+	     // Tạo phần tử mới cho bình luận
+	    const commentElement = document.createElement('div');
+	    commentElement.classList.add('tt-item');
+		
+	    // Hiển thị thông tin người bình luận, thời gian và nội dung bình luận
+	    commentElement.innerHTML = `
+	        <div class="tt-avatar">
+	            <a href="#"><img src="images/product/single/review-comments-img-02.jpg" alt=""></a>
+	        </div>
+	        <div class="tt-content">
+	            <div class="tt-rating" style="color: gold" >
+	                ${getRatingStars(rating)}
+	            </div>
+	            <div class="tt-comments-info">
+	                <span class="username">by <span>${username}</span></span>
+	                <span class="time"> ${timestamp}</span>
+	            </div>
+	            <p>${commentText}</p>
+	        </div>
+	    `;
+	
+	     // Thêm bình luận vào danh sách
+   		 document.querySelector('.tt-review-comments').appendChild(commentElement);
+    
+}

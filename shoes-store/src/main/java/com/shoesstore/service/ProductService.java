@@ -24,6 +24,8 @@ public interface ProductService {
 	
 	public List<Product> getFilteredProducts(String status, String name, Integer categoryId, Integer brandId, Double minPrice, Double maxPrice, String size) ;
 
+	Product getProduct(int productId);
+
 
 
 }

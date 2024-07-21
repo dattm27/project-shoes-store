@@ -17,4 +17,5 @@ public interface UserService {
 	public boolean verify(String code);
 
 	User update(int id, String fullName, String phone, String address);
+	User findUserByEmail(String email);
 }

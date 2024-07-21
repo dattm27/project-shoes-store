@@ -1,5 +1,8 @@
 package com.shoesstore.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +45,14 @@ public class FavortieServiceImpl implements FavoriteService {
 	public boolean isLoved(int userId, int productId) {
 		Favorite fav = favoriteRepository.findByUserIdAndProductId(userId, productId);
 		return (fav != null);
+	}
+
+	@Override
+	public List<Product> getFavoritedList(int userId) {
+		List<Favorite> fav = favoriteRepository.findAllByUserId(userId);
+		return  fav.stream()
+                .map(Favorite::getProduct)
+                .collect(Collectors.toList());
 	}
 
 }

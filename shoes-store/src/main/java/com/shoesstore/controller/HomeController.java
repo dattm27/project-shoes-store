@@ -14,6 +14,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,12 +28,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shoesstore.model.Brand;
 import com.shoesstore.model.Category;
+import com.shoesstore.model.Comment;
 import com.shoesstore.model.CustomUserDetails;
 import com.shoesstore.model.Order;
 import com.shoesstore.model.Product;
 import com.shoesstore.model.User;
 import com.shoesstore.service.BrandService;
 import com.shoesstore.service.CategoryService;
+import com.shoesstore.service.CommentService;
 import com.shoesstore.service.FavoriteService;
 import com.shoesstore.service.OrderService;
 import com.shoesstore.service.ProductService;
@@ -63,6 +66,9 @@ public class HomeController {
 	
 	@Autowired
 	private FavoriteService favoriteService;
+	
+	@Autowired
+	private CommentService commentService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
@@ -192,14 +198,26 @@ public class HomeController {
 	@GetMapping("product-details/{id}")
 	public String showProductDetails(@PathVariable("id") int productId, Model model) {
 		Product product = productService.findById(productId);
+		List<Comment> comments = commentService.getComment(productId);
 		// Lấy thông tin xác thực hiện tại
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if ( authentication.isAuthenticated()) {
-			CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			if (favoriteService.isLoved(currentUser.getId(), productId)) product.setFavorite(true);
-		}
+	if ( authentication.isAuthenticated()) {
+		
+//			CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+//					.getPrincipal();
+		 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//			if (favoriteService.isLoved(currentUser.getId(), productId)) product.setFavorite(true);
+	//	int userId = userService.findUserByEmail(authentication.getName()).getId(); 
+	//	if (favoriteService.isLoved(userId, productId)) product.setFavorite(true);
+	}
+	if (!(authentication instanceof AnonymousAuthenticationToken)) {
+	    //String currentUserName = authentication.getName();
+			int userId = userService.findUserByEmail(authentication.getName()).getId(); 
+			if (favoriteService.isLoved(userId, productId)) product.setFavorite(true);
+			model.addAttribute("isLoggedIn", true);
+	}
 		model.addAttribute("product", product);
+		model.addAttribute("comments",comments);
 		return "shopper/product";
 	}
 
@@ -266,5 +284,15 @@ public class HomeController {
 		if(order != null)
 		return ResponseEntity.ok().build();
 		return ResponseEntity.notFound().build();
+	}
+	
+	//xem trang danh sách các sản phẩm yêu thích của một user
+	@GetMapping("my-account/wishlist")
+	public String showFavoriteList(Model model) {
+		CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		List<Product> favList = favoriteService.getFavoritedList(currentUser.getId());
+		model.addAttribute("products" ,favList);
+		return "shopper/wishlist";
 	}
 }

@@ -31,10 +31,16 @@ public class OrderController {
 			@RequestParam("name") String recipient, @RequestParam("address") String deliveryAddress, @RequestParam("phone") String phoneNumber) {
 		com.shoesstore.model.CustomUserDetails currentUser = (com.shoesstore.model.CustomUserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
+		
 		User user = currentUser.getUser();
 		List<CartItem> cartItems = cartItemService.getCartItemsByUser(user);
 		Order order = orderService.createOrder(user, cartItems,recipient, deliveryAddress, phoneNumber, paymentMethod);
 		
+		// thanh toán chuyển khoản với VN PAY
+		if (paymentMethod.equalsIgnoreCase("ATM")) {
+			model.addAttribute(order);
+			return "shopper/vnpay-demo";
+		}
 
 		// Xóa tất cả các mục trong giỏ hàng của người dùng
 		cartItemService.clearCart(user);
@@ -45,4 +51,5 @@ public class OrderController {
 		model.addAttribute("order_id", order.getId());
 		return "shopper/order-result";
 	}
+	
 }

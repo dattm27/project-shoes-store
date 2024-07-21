@@ -188,6 +188,12 @@ public class ProductSerivceImpl implements ProductService {
 		return productRepository.findAll(specs);
 	}
 
+	@Override
+	public Product getProduct(int productId) {
+		
+		return productRepository.findById(productId).get();
+	}
+
 	
 
 }

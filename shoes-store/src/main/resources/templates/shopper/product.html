@@ -12,6 +12,29 @@
 	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="stylesheet" href="css/theme.css">
 	<link rel="stylesheet" href="css/toastr.min.css">
+	<link rel="stylesheet" href="css/flaticon.css">
+	<link rel="stylesheet" href="css/icomoon.css">
+
+	<style>
+		/* CSS */
+		.star {
+			cursor: pointer;
+		}
+
+		/* Định dạng sao chưa được chọn */
+		.star::before {
+			content: '☆';
+			font-size: 20px;
+		}
+
+		/* Định dạng sao khi được chọn */
+		.star.selected::before {
+			content: '★';
+			color: gold;
+			font-size: 20px;
+		}
+	</style>
+
 </head>
 
 <body class="tt-page-product-single">
@@ -87,8 +110,9 @@
 									th:text="${product.brand.name + ' ' + product.name + ' - ' + product.version}">
 									Product name</h1>
 								<div class="tt-price">
-									<span class="new-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">$price</span>
-									 <span class="old-price"></span> 
+									<span class="new-price"
+										th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">$price</span>
+									<span class="old-price"></span>
 								</div>
 								<div class="tt-review d-none">
 									<div class="tt-rating">
@@ -119,13 +143,13 @@
 								</div>
 								<div class="tt-wrapper">
 									<div class="tt-row-custom-01">
-										 									<div class="col-item d-none"> 
-										 										<div class="tt-input-counter style-01" style="user-select: none;"> 
-										 											<span class="minus-btn"></span> 
-										 											<input type="text" value="1" size="5"> 
-										 											<span class="plus-btn"></span> 
-										 										</div> 
-										 									</div> 
+										<div class="col-item d-none">
+											<div class="tt-input-counter style-01" style="user-select: none;">
+												<span class="minus-btn"></span>
+												<input type="text" value="1" size="5">
+												<span class="plus-btn"></span>
+											</div>
+										</div>
 										<div class="col-item">
 											<a id="addToCart" href="/add-to-cart" class="btn btn-lg">
 												<i class="icon-f-39"></i>CHỌN MUA
@@ -135,7 +159,7 @@
 								</div>
 								<div class="tt-wrapper">
 									<ul class="tt-list-btn">
-										<li><a class="btn-link" id="toogle-wishlist" href="#"><i
+										<li><a th:if="${isLoggedIn}" class="btn-link" id="toogle-wishlist" href="#"><i
 													th:class="${product.isFavorite} ? 'icon-h-13' : 'icon-n-072'"></i><span
 													th:text="${product.isFavorite} ? 'Đã thích' : 'Yêu thích'"></span></a>
 										</li>
@@ -143,15 +167,16 @@
 												COMPARE</a></li>
 									</ul>
 								</div>
-								 							<div class="tt-wrapper"> 
-								 								<div class="tt-add-info"> 
-								 									<ul> 
-								 										<li><span>Vendor:</span> Polo</li> 
-								 										<li><span>Product Type:</span> T-Shirt</li> 
-								 										<li><span>Tag:</span> <a href="#">T-Shirt</a>, <a href="#">Women</a>, <a href="#">Top</a></li> 
-								 									</ul> 
-								 								</div> 
-								 							</div> 
+								<div class="tt-wrapper">
+									<div class="tt-add-info">
+										<ul>
+											<li><span>Vendor:</span> Polo</li>
+											<li><span>Product Type:</span> T-Shirt</li>
+											<li><span>Tag:</span> <a href="#">T-Shirt</a>, <a href="#">Women</a>, <a
+													href="#">Top</a></li>
+										</ul>
+									</div>
+								</div>
 								<div class="tt-collapse-block">
 									<div class="tt-item">
 										<div class="tt-collapse-title">Mô tả</div>
@@ -194,7 +219,7 @@
 										</div>
 									</div>
 									<div class="tt-item">
-										<div class="tt-collapse-title tt-poin-comments d-none">REVIEWS (3)</div>
+										<div class="tt-collapse-title tt-poin-comments ">REVIEWS (3)</div>
 										<div class="tt-collapse-content">
 											<div class="tt-review-block">
 												<div class="tt-row-custom-02">
@@ -208,78 +233,32 @@
 													</div>
 												</div>
 												<div class="tt-review-comments">
-													<div class="tt-item">
-														<div class="tt-avatar">
-															<a href="#"><img
-																	src="images/product/single/review-comments-img-01.jpg"
-																	alt=""></a>
-														</div>
-														<div class="tt-content">
-															<div class="tt-rating">
-																<i class="icon-star"></i>
-																<i class="icon-star"></i>
-																<i class="icon-star"></i>
-																<i class="icon-star-half"></i>
-																<i class="icon-star-empty"></i>
+													<div th:each="comment: ${comments}">
+														<div class="tt-item">
+															<div class="tt-avatar">
+																<a href="#"><img
+																		src="images/product/single/review-comments-img-02.jpg"
+																		alt=""></a>
 															</div>
-															<div class="tt-comments-info">
-																<span class="username">by <span>ADRIAN</span></span>
-																<span class="time">on January 14, 2017</span>
+															<div class="tt-content">
+																<div class="tt-rating">
+																	<i class="icon-star"
+																		th:each="i: ${#numbers.sequence(1, 5)}"
+																		th:classappend="${i <= comment.rate} ? 'icon-star' : 'icon-star-empty'"></i>
+																</div>
+																<div class="tt-comments-info">
+																	<span class="username" th:text="${comment.name}">by
+																		<span>JESICA</span></span>
+																	<span class="time"
+																		th:text="${comment.getFormattedCreatedDate}">on
+																		January 14, 2017</span>
+																</div>
+																<!--<div class="tt-comments-title">Bad!</div>-->
+																<p th:text="${comment.comment}">
+																	Sed do eiusmod tempor incididunt ut labore et dolore
+																	magna aliqua.
+																</p>
 															</div>
-															<div class="tt-comments-title">Very Good!</div>
-															<p>
-																Ctetur adipisicing elit, sed do eiusmod tempor
-																incididunt ut labore et dolore magna aliqua. Ut enim ad
-																minim.
-															</p>
-														</div>
-													</div>
-													<div class="tt-item">
-														<div class="tt-avatar">
-															<a href="#"><img
-																	src="images/product/single/review-comments-img-02.jpg"
-																	alt=""></a>
-														</div>
-														<div class="tt-content">
-															<div class="tt-rating">
-																<i class="icon-star"></i>
-																<i class="icon-star"></i>
-																<i class="icon-star"></i>
-																<i class="icon-star-half"></i>
-																<i class="icon-star-empty"></i>
-															</div>
-															<div class="tt-comments-info">
-																<span class="username">by <span>JESICA</span></span>
-																<span class="time">on January 14, 2017</span>
-															</div>
-															<div class="tt-comments-title">Bad!</div>
-															<p>
-																Sed do eiusmod tempor incididunt ut labore et dolore
-																magna aliqua.
-															</p>
-														</div>
-													</div>
-													<div class="tt-item">
-														<div class="tt-avatar">
-															<a href="#"></a>
-														</div>
-														<div class="tt-content">
-															<div class="tt-rating">
-																<i class="icon-star"></i>
-																<i class="icon-star"></i>
-																<i class="icon-star"></i>
-																<i class="icon-star-half"></i>
-																<i class="icon-star-empty"></i>
-															</div>
-															<div class="tt-comments-info">
-																<span class="username">by <span>ADAM</span></span>
-																<span class="time">on January 14, 2017</span>
-															</div>
-															<div class="tt-comments-title">Very Good!</div>
-															<p>
-																Diusmod tempor incididunt ut labore et dolore magna
-																aliqua.
-															</p>
 														</div>
 													</div>
 												</div>
@@ -288,36 +267,92 @@
 														BE THE FIRST TO REVIEW <span>“<span
 																th:text="${product.name}"></span>”</span>
 													</div>
-													 <p>Your email address will not be published. Required fields are marked *</p> 
-													<div class="tt-rating-indicator">
-														<div class="tt-title">
-															YOUR RATING
-														</div>
-														<div class="tt-rating">
-															<i class="icon-star"></i>
-															<i class="icon-star"></i>
-															<i class="icon-star"></i>
-															<i class="icon-star-half"></i>
-															<i class="icon-star-empty"></i>
-														</div>
+													<p>Your email address will not be published. Required fields are
+														marked *</p>
+													<div th:unless="${isLoggedIn}">
+														<a class"tt-message-info" href="/login">Đăng nhập</a> để bình
+														luận
 													</div>
-													<form class="form-default">
+													<form id="comment-form" th:if="${isLoggedIn}">
+														<input type="hidden" id="productId" value="${product.id}">
+
+														<!-- Rate stars -->
 														<div class="form-group">
-															<label for="inputName" class="control-label">YOUR
-																TITLE</label>
-															<input type="text" class="form-control" id="inputName"
-																placeholder="Enter your name">
+															<label for="rating">Đánh giá:</label>
+															<div id="rating-stars">
+																<!-- Thêm các ngôi sao vào đây, mỗi ngôi sao có một sự kiện onclick để xác định rating -->
+																<span class="star selected" onclick="setRating(1)"></span>
+																<span class="star selected" onclick="setRating(2)"></span>
+																<span class="star selected" onclick="setRating(3)"></span>
+																<span class="star selected" onclick="setRating(4)"></span>
+																<span class="star selected" onclick="setRating(5)"></span>
+															</div>
 														</div>
+
+														<!-- Comment Textarea -->
 														<div class="form-group">
-															<label for="textarea" class="control-label">YOUR
-																REVIEW</label>
-															<textarea class="form-control" id="textarea"
-																placeholder="Enter your review" rows="8"></textarea>
+															<label for="comment">Tên của bạn:</label>
+															<input type="text" class="form-control" id="name" name="name"
+																rows="4" placeholder="Type your name here..."
+																required></input>
 														</div>
+
 														<div class="form-group">
-															<button type="submit" class="btn">SUBMIT</button>
+															<label for="comment">Bình luận :</label>
+															<textarea class="form-control" id="comment" name="comment"
+																rows="4" placeholder="Type your comment here..."
+																required></textarea>
 														</div>
+
+														<!-- Submit Button -->
+														<button type="submit" class="btn btn-primary"
+															onclick="addComment()">Comment</button>
 													</form>
+
+													<script>
+														document.getElementById('comment-form').addEventListener('submit', function (event) {
+
+															event.preventDefault();
+															const commentText = document.getElementById('comment').value;
+															const name = document.getElementById('name').value;
+															const productId = document.getElementById('productId').value;
+															// Mã hóa giá trị commentText trước khi thêm vào chuỗi dữ liệu
+															const encodedCommentText = encodeURIComponent(commentText);
+															// Lấy giá trị số sao từ biến userRating
+															const rating = userRating;
+
+															const xhr = new XMLHttpRequest();
+															xhr.open('POST', '/comment', true);
+															xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+
+															//const data = `command=COMMENT&userID=${sessionScope.userID}&postID=${POST.ID}&comment=` + encodedCommentText ;
+															const data = `command=COMMENT` + `&name= ` + name + `&comment= ` + commentText + `&rating=` + rating + `&productId=` + productId;
+															// alert(commentText + "\n" + data);
+															xhr.onreadystatechange = function () {
+																if (xhr.readyState === XMLHttpRequest.DONE) {
+																	if (xhr.status === 200) {
+																		// Xử lý phản hồi từ servlet nếu cần
+																		console.log(xhr.responseText);
+
+																	} else {
+																		console.error('Error:', xhr.status);
+																	}
+																}
+															};
+
+															xhr.send(data);
+															// Xóa nội dung trong textarea sau khi thêm bình luận
+															document.getElementById('name').value = '';
+															// Xóa nội dung trong textarea sau khi thêm bình luận
+															document.getElementById('comment').value = '';
+															// Loại bỏ lớp 'selected' từ tất cả các ngôi sao
+															const stars = document.querySelectorAll('.star');
+															stars.forEach((star) => {
+																star.classList.remove('selected');
+															});
+
+														});
+													</script>
 												</div>
 											</div>
 										</div>
@@ -330,70 +365,6 @@
 				</div>
 			</div>
 		</div>
-		<!--<div class="container-indent wrapper-social-icon">
-			<div class="container">
-				<ul class="tt-social-icon justify-content-center">
-					<li><a class="icon-g-64" href="http://www.facebook.com/"></a></li>
-					<li><a class="icon-h-58" href="http://www.facebook.com/"></a></li>
-					<li><a class="icon-g-66" href="http://www.twitter.com/"></a></li>
-					<li><a class="icon-g-67" href="http://www.google.com/"></a></li>
-					<li><a class="icon-g-70" href="https://instagram.com/"></a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="container-indent">
-			<div class="container container-fluid-custom-mobile-padding">
-				<div class="tt-block-title text-left">
-					<h3 class="tt-title-small">Thương hiệu <span th:text="${product.brand.name}"></span></h3>
-				</div>
-				<div
-					class="tt-carousel-products row arrow-location-right-top tt-alignment-img tt-layout-product-item slick-animated-show-js">
-					<div class="col-2 col-md-4 col-lg-3" th:each="product : ${relatedProducts}">
-						<div class="tt-product thumbprod-center">
-							<div class="tt-image-box">
-								<a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView"
-									data-tooltip="Xem trước" data-tposition="left"></a>
-								<a href="#" class="tt-btn-wishlist" th:if="${isSignedIn}" data-tooltip="Yêu thích"
-									th:classappend="${product.isWishList} ? 'active' : ''" data-tposition="left"></a>
-								<a href="#" class="tt-btn-compare d-none" data-tooltip="So sánh"
-									data-tposition="left"></a>
-								<input class="productBoxId" type="hidden" th:value="${product.id}">
-								<a href="product.html">
-									<span class="tt-img"><img th:src="${product.primaryImage()}" alt=""></span>
-									<span class="tt-img-roll-over"><img th:src="${product.primaryImage()}"
-											alt=""></span>
-								</a>
-							</div>
-							<div class="tt-description">
-								<div class="tt-row">
-									<ul class="tt-add-info">
-										<li><a th:href="${'/product-listing?brandId=' + product.brand.id}"
-												th:text="${product.brand.name}"></a></li>
-									</ul>
-								</div>
-								<h2 class="tt-title"><a th:href="@{/product/} + ${product.id}"
-										th:text="${product.name + ' - ' + product.versionName}">name</a></h2>
-								<div class="tt-price" th:text="${product.formatPrice()}">
-									price
-								</div>
-								<div class="tt-product-inside-hover">
-									 								<div class="tt-row-btn"> 
-									 									<a href="#" class="tt-btn-addtocart thumbprod-button-bg" data-toggle="modal" data-target="#modalAddToCartProduct">ADD TO CART</a> 
-									 								</div> 
-									<div class="tt-row-btn">
-										<a href="#" class="tt-btn-quickview" data-toggle="modal"
-											data-target="#ModalquickView"></a>
-										<a href="#" class="tt-btn-wishlist"></a>
-										<a href="#" class="tt-btn-compare"></a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>-->
 	</div>
 
 	<!-- footer -->
@@ -418,11 +389,12 @@
 	<script src="external/form/jquery.form.js"></script>
 	<script src="external/form/jquery.validate.min.js"></script>
 	<script src="external/form/jquery.form-init.js"></script>
-	<!-- custom -->
+
 	<script src="js/toastr.min.js" type="text/javascript"></script>
 	<script src="js/header.js" type="text/javascript"></script>
 	<script src="js/product-box.js" type="text/javascript"></script>
 	<script src="js/product.js" type="text/javascript"></script>
+
 </body>
 
 </html>

@@ -51,7 +51,7 @@
 							</thead>
 							<tbody>
 								<tr th:each="item : ${order.orderItems}" th:with="product=${item.product}">
-									<td><a th:href="'/product/' + ${product.id}" th:text="${product.name}"></a></td>
+									<td><a th:href="'/product-details/' + ${product.id}" th:text="${product.name}"></a></td>
 									<td th:text="${item.size}"></td>
 									<td th:text="${order.formatedPrice(item.price)}"></td>
 									<td th:text="${item.quantity}"></td>
