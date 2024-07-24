@@ -77,7 +77,7 @@ public class HomeController {
 
 	@RequestMapping("/")
 	public String showHomePage(Model model) {
-		List<Product> productList = productService.getProducts(null, null);
+		List<Product> productList = productService.getProducts("Đang bán", null);
 		model.addAttribute("products", productList);
 		return "/shopper/index";
 	}

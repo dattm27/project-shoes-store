@@ -72,6 +72,8 @@ public class ProductController {
 		// Xử lý lưu trữ size và số lượng
 		for (Map.Entry<String, String> entry : sizes.entrySet()) {
 			if (entry.getKey().startsWith("size")) {
+			
+				if (!entry.getValue().equalsIgnoreCase("")) {
 				int size = Integer.parseInt(entry.getKey().substring(6, 8)); // lấy số size từ tên tham số
 				int quantity = Integer.parseInt(entry.getValue());
 
@@ -81,6 +83,7 @@ public class ProductController {
 				productSize.setSize(String.valueOf(size));
 				productSize.setQuantity(quantity);
 				product.addSize(productSize); // phương thức này cần được thêm vào lớp Product
+				}
 			}
 		}
 		// Lưu sản phẩm vào cơ sở dữ liệu

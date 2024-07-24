@@ -89,6 +89,7 @@
 
 		</div>
 	</div>
+	
 	</div>
 	<!--modal để chỉnh sửa thông tin sản phẩm-->
 	<!-- Modal chỉnh sửa sản phẩm -->
@@ -231,6 +232,11 @@
 		function openAddProductModal() {
 			// Hiển thị modal
 			$('#addProductModal').modal('show');
+			  
+	    
+    
+
+			
 		}
 
 		$(document).ready(function () {
@@ -293,6 +299,9 @@
 						// Đóng modal sau khi lưu thành công
 						$('#addProductModal').modal('hide');
 						// Nạp lại trang để cập nhật danh sách sản phẩm
+						  // Reset form
+				          $('#addProductForm')[0].reset();
+				   
 						//location.reload();
 						getContent();
 					})
@@ -469,12 +478,13 @@
 			const form = event.target;
 			const sizeInputs = form.querySelectorAll(".size-input");
 
-			sizeInputs.forEach(input => {
-				if (!input.value) {
-					input.disabled = true;
-				}
+			//sizeInputs.forEach(input => {
+			//	if (!input.value) {
+			//		input.disabled = true;
+			//	}
+			//
 			});
-		});
+		//});
 	</script>
 </body>
 

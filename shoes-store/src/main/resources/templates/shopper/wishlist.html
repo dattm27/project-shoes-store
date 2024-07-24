@@ -38,7 +38,7 @@
 								<img th:src="@{/images/{imageUrl}(imageUrl=${product.images[0].imageUrl})}" th:alt="${product.name}">
 							</div>
 							<div class="tt-description">
-								<h2 class="tt-title"><a th:href="@{/product/} + ${product.id}" th:text="${product.name + ' - ' + product.version}"></a></h2>
+								<h2 class="tt-title"><a th:href="@{/product-details/} + ${product.id}" th:text="${product.name + ' - ' + product.version}"></a></h2>
 								<div class="tt-price">
 									<span class="new-price" th:text="${product.price}">$14</span>
 <!-- 									<span class="old-price">$24</span> -->

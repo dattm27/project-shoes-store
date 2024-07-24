@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(encodedPassword);
 			user.setPhoneNumber(phoneNumber);
 			user.setStatus(0); // chưa kích hoạt
+			user.setRole("user");
 
 			String randomCode = RandomString.make(64);
 			user.setVerificationCode(randomCode);

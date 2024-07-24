@@ -39,6 +39,11 @@ public class SecurityConfig {
 		})
 		
 		.formLogin(withDefaults())
+		.logout(logout -> logout
+			
+				.logoutSuccessUrl("/")
+				.permitAll()
+			)
 		.csrf(csrf -> csrf.disable()); // Vô hiệu hóa CSRF
 		
 //				.oauth2Login(oauth2Login ->
@@ -49,8 +54,7 @@ public class SecurityConfig {
 //						.loginProcessingUrl("/login").defaultSuccessUrl("/", true).failureUrl("/signin?error")
 //						.permitAll() // khi đăng nhập sai -> trả về trang đăng nhập kèm báo lỗi
 //
-//				).logout(logout -> logout.logoutUrl("/signout") // Endpoint cho việc đăng xuất
-//						.logoutSuccessUrl("/") // URL sau khi đăng xuất thành công
+
 //				).headers(headers -> headers
 //				        .frameOptions(frameOptions -> frameOptions
 //				                .sameOrigin() // Hoặc .disable() nếu bạn muốn vô hiệu hóa X-Frame-Options

@@ -3,7 +3,9 @@ package com.shoesstore.controller;
 import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import com.shoesstore.service.UserService;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/auth")
@@ -70,6 +73,14 @@ public class AuthController {
 			String error = "Gặp lỗi khi xác thực";
 			model.addAttribute("error", error);
 		}
-		return "login-form";
+		 return "redirect:/";
 	}
+	
+	 @GetMapping("/signout")
+	    public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+	        if (authentication != null) {
+	            new SecurityContextLogoutHandler().logout(request, response, authentication);
+	        }
+	        return "redirect:/";
+	    }
 }
